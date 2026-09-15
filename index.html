@@ -304,7 +304,704 @@ body.overflow-hidden-fixed {
     padding: 0.15rem 0.6rem !important;
     font-size: 0.65rem !important;
 }
+    
+/* =========================================================
+   BISC MENGAJI — PREMIUM UI LAYER
+   Hanya memperbarui visual. ID, onclick, data, dan JS
+   aplikasi tetap dipertahankan.
+   ========================================================= */
+
+:root {
+    --bisc-primary: #075985;
+    --bisc-primary-dark: #082f49;
+    --bisc-accent: #d4a72c;
+    --bisc-ink: #0f172a;
+    --bisc-muted: #64748b;
+    --bisc-border: rgba(148, 163, 184, .20);
+    --bisc-shadow: 0 12px 30px rgba(15, 23, 42, .06);
+    --bisc-shadow-lg: 0 22px 55px rgba(15, 23, 42, .11);
+}
+
+html {
+    background: #f5f8fb;
+}
+
+body {
+    background:
+        radial-gradient(circle at 8% 0%, rgba(14,165,233,.075), transparent 28rem),
+        radial-gradient(circle at 92% 8%, rgba(20,184,166,.055), transparent 25rem),
+        #f5f8fb !important;
+    letter-spacing: -.008em;
+}
+
+/* Scrollbar premium */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(7,89,133,.25) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+    background: rgba(7,89,133,.22);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(7,89,133,.38); }
+
+/* Header */
+header {
+    background: rgba(7, 47, 73, .94) !important;
+    box-shadow: 0 8px 28px rgba(2, 30, 45, .16) !important;
+    border-bottom-color: rgba(125,211,252,.16) !important;
+}
+header > div {
+    min-height: 66px;
+}
+header img {
+    box-shadow: 0 5px 18px rgba(0,0,0,.18);
+}
+header button, header a {
+    backdrop-filter: blur(12px);
+}
+header button:hover, header a:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,.14);
+}
+
+/* Main spacing */
+main {
+    padding-top: 1.75rem !important;
+}
+.view-panel {
+    will-change: opacity, transform;
+}
+
+/* Hero / carousel */
+#motivationCarousel {
+    min-height: 210px;
+    border-radius: 28px !important;
+    border-color: rgba(125,211,252,.20) !important;
+    box-shadow: 0 24px 65px rgba(8,47,73,.18) !important;
+    isolation: isolate;
+}
+#motivationCarousel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(115deg, rgba(255,255,255,.055), transparent 35%),
+        linear-gradient(300deg, rgba(251,191,36,.035), transparent 38%);
+    pointer-events: none;
+}
+#motivationCarousel .blockquote,
+#motivationCarousel blockquote {
+    text-wrap: balance;
+}
+
+/* Semua kartu utama */
+.glass-card,
+.bg-white.rounded-3xl,
+.bg-white.rounded-2xl {
+    box-shadow: var(--bisc-shadow);
+    border-color: var(--bisc-border);
+}
+
+/* Tombol menu utama */
+#view-home button[class*="rounded-3xl"] {
+    position: relative;
+    overflow: hidden;
+}
+#view-home button[class*="rounded-3xl"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, rgba(255,255,255,.38), transparent 38%);
+    opacity: 0;
+    transition: opacity .3s ease;
+    pointer-events: none;
+}
+#view-home button[class*="rounded-3xl"]:hover::after {
+    opacity: 1;
+}
+
+/* Icon menu */
+#view-home button[class*="rounded-3xl"] > div:first-child {
+    box-shadow: 0 8px 18px rgba(15,23,42,.06);
+}
+
+/* Quick access */
+#view-home .bg-white.p-6.rounded-3xl {
+    box-shadow: 0 14px 35px rgba(15,23,42,.055);
+}
+
+/* Section headings */
+h2, h3 {
+    text-wrap: balance;
+}
+
+/* Form controls */
+input, select, textarea {
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease, transform .2s ease;
+}
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 4px rgba(14,165,233,.10) !important;
+}
+
+/* Quran toolbar */
+#view-quran > div:first-child,
+#view-quran-detail > div:first-child {
+    box-shadow: 0 10px 28px rgba(15,23,42,.055);
+    border-color: rgba(148,163,184,.20);
+}
+
+/* Mushaf frame */
+#mushaf-page-container > div {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(56,189,248,.08), transparent 32%),
+        linear-gradient(145deg, #172033, #0f172a) !important;
+    border: 1px solid rgba(148,163,184,.13);
+    box-shadow: 0 28px 70px rgba(15,23,42,.20) !important;
+}
+#mushaf-card-right,
+#mushaf-card-left {
+    box-shadow:
+        0 12px 30px rgba(15,23,42,.12),
+        inset 0 0 0 1px rgba(120,53,15,.055) !important;
+}
+#img-mushaf-right,
+#img-mushaf-left {
+    filter: drop-shadow(0 5px 8px rgba(15,23,42,.10));
+}
+
+/* Audio bar */
+#mushaf-audio-bar {
+    box-shadow: 0 10px 28px rgba(245,158,11,.07);
+    backdrop-filter: blur(10px);
+}
+
+/* Quran list cards rendered by JS */
+#quran-surah-list > * {
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+#quran-surah-list > *:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(15,23,42,.08);
+}
+
+/* Detail ayat */
+#detail-ayat-list > * {
+    box-shadow: 0 10px 28px rgba(15,23,42,.045);
+    border-color: rgba(148,163,184,.18);
+}
+
+/* Murojaah */
+#view-murojaah .bg-gradient-to-br {
+    box-shadow: 0 22px 50px rgba(8,47,73,.15);
+}
+#view-murojaah .juz-btn {
+    min-height: 58px;
+}
+
+/* Modal */
+#storyDetailModal > div {
+    box-shadow: 0 30px 90px rgba(2,6,23,.28) !important;
+}
+
+/* Footer */
+footer {
+    box-shadow: 0 -10px 35px rgba(15,23,42,.025);
+}
+
+/* Motion yang lebih halus */
+button, a, select, input, .glass-card {
+    -webkit-tap-highlight-color: transparent;
+}
+button:active, a:active {
+    transition-duration: .08s !important;
+}
+
+/* Dark mode — tetap mengikuti sistem toggle yang sudah ada */
+body.dark-mode {
+    background:
+        radial-gradient(circle at 8% 0%, rgba(14,116,144,.11), transparent 28rem),
+        radial-gradient(circle at 92% 8%, rgba(13,148,136,.08), transparent 25rem),
+        #07111f !important;
+}
+body.dark-mode header {
+    background: rgba(3, 24, 39, .96) !important;
+}
+body.dark-mode .glass-card,
+body.dark-mode .bg-white.rounded-3xl,
+body.dark-mode .bg-white.rounded-2xl {
+    box-shadow: 0 16px 38px rgba(0,0,0,.18);
+}
+body.dark-mode #mushaf-page-container > div {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(14,116,144,.12), transparent 32%),
+        #020617 !important;
+}
+
+/* Mobile polish */
+@media (max-width: 640px) {
+    main {
+        padding-top: 1rem !important;
+    }
+    #motivationCarousel {
+        min-height: 200px;
+        border-radius: 23px !important;
+        padding: 1.25rem !important;
+    }
+    #view-home {
+        gap: 1rem;
+    }
+    #view-home button[class*="rounded-3xl"] {
+        border-radius: 22px !important;
+    }
+    #view-home button[class*="rounded-3xl"] > div:first-child {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin-bottom: .8rem;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+    }
+}
+
     </style>
+
+<style id="bisc-ultra-premium-theme">
+/* =========================================================
+   BISC MENGAJI — ULTRA PREMIUM UI
+   Visual-only layer: existing IDs, onclick handlers,
+   data, API logic and JavaScript are intentionally untouched.
+   ========================================================= */
+
+:root{
+  --ui-navy:#06283d;
+  --ui-navy-2:#0b3d5c;
+  --ui-blue:#0ea5e9;
+  --ui-gold:#d7a93d;
+  --ui-gold-2:#f0c96a;
+  --ui-cream:#fffdf7;
+  --ui-ink:#102331;
+  --ui-muted:#6b7b88;
+  --ui-line:rgba(15,42,58,.10);
+  --ui-glass:rgba(255,255,255,.78);
+  --ui-shadow:0 18px 50px rgba(7,36,55,.09);
+  --ui-shadow-hover:0 26px 70px rgba(7,36,55,.15);
+}
+
+html{background:#f4f8fa}
+body{
+  background:
+    radial-gradient(900px 420px at -8% -5%,rgba(14,165,233,.11),transparent 62%),
+    radial-gradient(760px 380px at 108% 8%,rgba(215,169,61,.10),transparent 60%),
+    linear-gradient(180deg,#f8fbfc 0%,#f3f7f9 100%) !important;
+  color:var(--ui-ink);
+}
+
+/* Premium selection */
+::selection{background:rgba(215,169,61,.25);color:var(--ui-navy)}
+*{scrollbar-width:thin;scrollbar-color:rgba(7,61,92,.25) transparent}
+*::-webkit-scrollbar{width:7px;height:7px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,rgba(7,61,92,.28),rgba(215,169,61,.42));
+  border-radius:99px;border:1px solid transparent;background-clip:padding-box
+}
+
+/* Intro */
+#intro-container{
+  background:linear-gradient(135deg,rgba(2,17,29,.96),rgba(5,42,62,.94)) !important;
+  backdrop-filter:blur(18px);
+}
+#intro-video{
+  border:1px solid rgba(240,201,106,.30) !important;
+  box-shadow:0 35px 100px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+/* Header — elegant glass bar */
+header{
+  background:linear-gradient(105deg,rgba(4,37,56,.97),rgba(7,62,88,.94) 55%,rgba(5,43,63,.97)) !important;
+  border-bottom:1px solid rgba(240,201,106,.20) !important;
+  box-shadow:0 10px 35px rgba(2,24,38,.20) !important;
+  backdrop-filter:blur(20px) saturate(140%) !important;
+}
+header > div{min-height:72px !important}
+header img{
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 8px 25px rgba(0,0,0,.25) !important;
+}
+header h1{
+  letter-spacing:.10em !important;
+  text-shadow:0 2px 18px rgba(125,211,252,.15);
+}
+header p{letter-spacing:.015em}
+header button,header a{
+  border:1px solid rgba(255,255,255,.11) !important;
+  background:rgba(255,255,255,.065) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 7px 20px rgba(0,0,0,.10) !important;
+  transition:transform .25s ease,background .25s ease,box-shadow .25s ease,border-color .25s ease !important;
+}
+header button:hover,header a:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.12) !important;
+  border-color:rgba(240,201,106,.32) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.18) !important;
+}
+
+/* Main canvas */
+main{padding-top:2rem !important;padding-bottom:3rem !important}
+.view-panel{
+  animation:ultraView .48s cubic-bezier(.16,1,.3,1);
+}
+@keyframes ultraView{
+  from{opacity:0;transform:translateY(10px) scale(.995)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* Hero */
+#motivationCarousel{
+  min-height:245px !important;
+  border-radius:30px !important;
+  padding:2rem 2.25rem !important;
+  border:1px solid rgba(125,211,252,.18) !important;
+  background:
+    radial-gradient(500px 220px at 85% 0%,rgba(215,169,61,.12),transparent 70%),
+    radial-gradient(500px 260px at 10% 100%,rgba(14,165,233,.13),transparent 70%),
+    linear-gradient(125deg,#041f31 0%,#063b59 48%,#071a2a 100%) !important;
+  box-shadow:0 28px 75px rgba(3,35,54,.22),inset 0 1px 0 rgba(255,255,255,.07) !important;
+}
+#motivationCarousel:after{
+  content:"";
+  position:absolute;inset:1px;border-radius:29px;pointer-events:none;
+  border:1px solid rgba(255,255,255,.035);
+}
+#motivationCarousel blockquote{
+  font-size:clamp(1.15rem,2.2vw,1.65rem) !important;
+  line-height:1.7 !important;
+  text-shadow:0 5px 24px rgba(0,0,0,.20);
+}
+#motivationCarousel .dot-btn{
+  box-shadow:0 0 0 3px transparent;
+}
+#motivationCarousel .dot-btn:hover{
+  box-shadow:0 0 0 3px rgba(240,201,106,.10);
+}
+
+/* Universal cards */
+.glass-card,
+.bg-white.rounded-3xl,
+.bg-white.rounded-2xl{
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(249,252,253,.88)) !important;
+  border:1px solid rgba(122,145,158,.15) !important;
+  box-shadow:var(--ui-shadow) !important;
+  backdrop-filter:blur(14px);
+}
+.glass-card:hover,
+.bg-white.rounded-3xl:hover{
+  box-shadow:var(--ui-shadow-hover) !important;
+}
+
+/* Home feature tiles */
+#view-home button[class*="rounded-3xl"]{
+  min-height:184px;
+  border:1px solid rgba(117,143,158,.14) !important;
+  background:
+    radial-gradient(220px 100px at 50% 0%,rgba(255,255,255,.9),transparent 75%),
+    linear-gradient(145deg,#fff,#f8fbfc) !important;
+  box-shadow:0 12px 32px rgba(10,43,59,.065) !important;
+  position:relative;isolation:isolate;
+}
+#view-home button[class*="rounded-3xl"]:before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.7),transparent 38%,rgba(215,169,61,.025));
+  opacity:0;transition:opacity .3s ease;
+}
+#view-home button[class*="rounded-3xl"]:hover:before{opacity:1}
+#view-home button[class*="rounded-3xl"]:hover{
+  transform:translateY(-5px) !important;
+  border-color:rgba(14,165,233,.30) !important;
+}
+#view-home button[class*="rounded-3xl"] > div:first-child{
+  width:68px;height:68px;border-radius:20px !important;
+  box-shadow:0 10px 24px rgba(15,23,42,.08),inset 0 1px 0 rgba(255,255,255,.75) !important;
+}
+#view-home button[class*="rounded-3xl"] span:first-of-type{
+  letter-spacing:-.015em;
+}
+
+/* Quick access panel */
+#view-home .bg-white.p-6.rounded-3xl{
+  padding:1.5rem !important;
+  border-radius:26px !important;
+  box-shadow:0 16px 42px rgba(7,36,55,.065) !important;
+}
+#view-home .bg-white.p-6.rounded-3xl h3{
+  padding-bottom:.9rem;
+  border-bottom:1px solid rgba(100,116,139,.10);
+}
+#view-home .bg-white.p-6.rounded-3xl button{
+  min-height:48px;
+  border-radius:15px !important;
+  background:linear-gradient(180deg,#f1f8fb,#eaf4f8) !important;
+  border-color:rgba(14,116,144,.10) !important;
+}
+#view-home .bg-white.p-6.rounded-3xl button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(7,61,92,.10);
+}
+
+/* Story carousel cards */
+#quranStoryCarousel > *{
+  border-radius:22px !important;
+  border:1px solid rgba(117,143,158,.14) !important;
+  box-shadow:0 14px 35px rgba(7,36,55,.075) !important;
+  transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease !important;
+}
+#quranStoryCarousel > *:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 48px rgba(7,36,55,.13) !important;
+  border-color:rgba(215,169,61,.25) !important;
+}
+
+/* Inputs / selects */
+input,select,textarea{
+  border-color:rgba(100,116,139,.18) !important;
+  box-shadow:0 2px 10px rgba(7,36,55,.025) !important;
+  border-radius:14px !important;
+}
+input:hover,select:hover,textarea:hover{
+  border-color:rgba(14,165,233,.30) !important;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none !important;
+  border-color:rgba(14,165,233,.60) !important;
+  box-shadow:0 0 0 4px rgba(14,165,233,.10),0 8px 24px rgba(7,61,92,.06) !important;
+}
+
+/* Quran top toolbar */
+#view-quran > div:first-child,
+#view-quran-detail > div:first-child{
+  border-radius:20px !important;
+  background:rgba(255,255,255,.90) !important;
+  border:1px solid rgba(100,116,139,.13) !important;
+  box-shadow:0 12px 32px rgba(7,36,55,.065) !important;
+  backdrop-filter:blur(14px);
+}
+#btn-mode-surah,#btn-mode-mushaf{
+  min-height:40px;
+}
+#btn-mode-mushaf{
+  box-shadow:0 8px 18px rgba(14,116,144,.20) !important;
+}
+#btn-fullscreen{
+  border:1px solid rgba(100,116,139,.15) !important;
+}
+
+/* Audio bar */
+#mushaf-audio-bar{
+  border:1px solid rgba(215,169,61,.20) !important;
+  background:
+    linear-gradient(105deg,rgba(255,248,228,.94),rgba(255,244,210,.70)) !important;
+  border-radius:18px !important;
+  box-shadow:0 12px 32px rgba(156,104,13,.07) !important;
+}
+
+/* Surah list */
+#quran-surah-list{
+  background:rgba(238,246,249,.72) !important;
+  border-radius:22px !important;
+  padding:10px !important;
+}
+#quran-surah-list > *{
+  border-radius:18px !important;
+  background:rgba(255,255,255,.94) !important;
+  border-color:rgba(100,116,139,.12) !important;
+  box-shadow:0 8px 24px rgba(7,36,55,.045) !important;
+}
+#quran-surah-list > *:hover{
+  transform:translateY(-3px) !important;
+  border-color:rgba(14,165,233,.35) !important;
+  box-shadow:0 18px 38px rgba(7,61,92,.10) !important;
+}
+
+/* Mushaf */
+#mushaf-page-container > div{
+  border-radius:28px !important;
+  padding:10px !important;
+  background:
+    radial-gradient(500px 260px at 50% 0%,rgba(14,165,233,.11),transparent 70%),
+    linear-gradient(145deg,#172b3a,#071725) !important;
+  border:1px solid rgba(255,255,255,.08) !important;
+  box-shadow:0 32px 85px rgba(2,24,38,.25) !important;
+}
+#mushaf-card-right,#mushaf-card-left{
+  border:1px solid rgba(135,102,42,.13);
+  box-shadow:0 16px 35px rgba(0,0,0,.13),inset 0 0 0 1px rgba(255,255,255,.50) !important;
+}
+#img-mushaf-right,#img-mushaf-left{
+  filter:drop-shadow(0 9px 14px rgba(0,0,0,.13)) !important;
+}
+#label-right-page,#label-left-page{
+  box-shadow:0 4px 12px rgba(112,77,11,.08);
+}
+
+/* Ayat cards */
+#detail-ayat-list > *{
+  border-radius:20px !important;
+  border-color:rgba(100,116,139,.13) !important;
+  box-shadow:0 12px 30px rgba(7,36,55,.055) !important;
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease !important;
+}
+#detail-ayat-list > *:hover{
+  transform:translateY(-2px);
+  box-shadow:0 18px 40px rgba(7,36,55,.09) !important;
+}
+
+/* Murojaah */
+#view-murojaah .bg-gradient-to-br{
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 28px 65px rgba(7,36,55,.15) !important;
+}
+#view-murojaah .juz-btn{
+  min-height:62px !important;
+  border-radius:17px !important;
+  border-color:rgba(100,116,139,.14) !important;
+  box-shadow:0 8px 20px rgba(7,36,55,.045) !important;
+}
+#view-murojaah .juz-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 30px rgba(7,61,92,.10) !important;
+}
+
+/* Modal */
+#storyDetailModal{
+  background:rgba(2,17,29,.64) !important;
+  backdrop-filter:blur(14px) saturate(120%);
+}
+#storyDetailModal > div{
+  border:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:0 40px 110px rgba(0,0,0,.38) !important;
+  border-radius:28px !important;
+}
+
+/* Generic interactive polish */
+button,a{cursor:pointer}
+button{font-family:inherit}
+button:focus-visible,a:focus-visible{
+  outline:2px solid rgba(14,165,233,.55);
+  outline-offset:3px;
+}
+button:active,a:active{transform:scale(.985)}
+.fa-solid,.fa-brands{transition:transform .25s ease}
+button:hover .fa-solid,button:hover .fa-brands{transform:translateY(-1px)}
+
+/* Footer */
+footer{
+  background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(242,247,249,.94)) !important;
+  border-top:1px solid rgba(100,116,139,.09);
+  box-shadow:0 -18px 45px rgba(7,36,55,.035) !important;
+}
+footer .inline-flex{box-shadow:0 6px 18px rgba(7,36,55,.05)}
+
+/* Dark mode — richer, less flat */
+body.dark-mode{
+  background:
+    radial-gradient(900px 420px at -8% -5%,rgba(14,116,144,.15),transparent 62%),
+    radial-gradient(760px 380px at 108% 8%,rgba(215,169,61,.07),transparent 60%),
+    linear-gradient(180deg,#06121c 0%,#081622 100%) !important;
+}
+body.dark-mode header{
+  background:linear-gradient(105deg,rgba(2,24,37,.98),rgba(4,49,70,.96),rgba(2,27,41,.98)) !important;
+}
+body.dark-mode .glass-card,
+body.dark-mode .bg-white.rounded-3xl,
+body.dark-mode .bg-white.rounded-2xl,
+body.dark-mode #view-quran > div:first-child,
+body.dark-mode #view-quran-detail > div:first-child{
+  background:linear-gradient(145deg,rgba(20,38,51,.94),rgba(12,28,40,.94)) !important;
+  border-color:rgba(148,163,184,.13) !important;
+  box-shadow:0 18px 48px rgba(0,0,0,.20) !important;
+}
+body.dark-mode #view-home button[class*="rounded-3xl"]{
+  background:linear-gradient(145deg,#142c3b,#0d202d) !important;
+  border-color:rgba(148,163,184,.12) !important;
+  box-shadow:0 15px 35px rgba(0,0,0,.20) !important;
+}
+body.dark-mode #view-home button[class*="rounded-3xl"] span:first-of-type{
+  color:#f1f5f9 !important;
+}
+body.dark-mode #view-home .bg-white.p-6.rounded-3xl{
+  background:linear-gradient(145deg,#142c3b,#0d202d) !important;
+}
+body.dark-mode #quran-surah-list{
+  background:rgba(10,27,39,.78) !important;
+  border-color:rgba(148,163,184,.10) !important;
+}
+body.dark-mode #quran-surah-list > *{
+  background:rgba(20,38,51,.94) !important;
+  border-color:rgba(148,163,184,.11) !important;
+}
+body.dark-mode #quran-surah-list > * h3,
+body.dark-mode #quran-surah-list > * span,
+body.dark-mode #quran-surah-list > * .font-arabic{
+  color:#f1f5f9 !important;
+}
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea{
+  background:#081824 !important;
+  color:#f8fafc !important;
+  border-color:rgba(148,163,184,.18) !important;
+}
+body.dark-mode #mushaf-audio-bar{
+  background:linear-gradient(105deg,rgba(93,65,16,.34),rgba(76,55,17,.22)) !important;
+}
+body.dark-mode footer{
+  background:linear-gradient(180deg,rgba(7,21,31,.78),rgba(4,14,22,.98)) !important;
+  border-color:rgba(148,163,184,.09);
+}
+
+/* Mobile */
+@media(max-width:640px){
+  main{padding-top:1.1rem !important;padding-left:.75rem !important;padding-right:.75rem !important}
+  header > div{min-height:64px !important}
+  header img{width:40px !important;height:40px !important}
+  #motivationCarousel{
+    min-height:230px !important;
+    border-radius:24px !important;
+    padding:1.35rem !important;
+  }
+  #motivationCarousel blockquote{font-size:1.08rem !important;line-height:1.75 !important}
+  #view-home button[class*="rounded-3xl"]{
+    min-height:160px;
+    padding:1rem !important;
+    border-radius:21px !important;
+  }
+  #view-home button[class*="rounded-3xl"] > div:first-child{
+    width:56px;height:56px;border-radius:17px !important;
+    margin-bottom:.7rem !important;
+  }
+  #mushaf-page-container > div{border-radius:20px !important;padding:5px !important}
+}
+
+/* Respect reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{
+    animation-duration:.01ms !important;
+    transition-duration:.01ms !important;
+  }
+}
+</style>
+
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-32 transition-colors duration-300">
 
@@ -685,7 +1382,7 @@ body.overflow-hidden-fixed {
 
             
             <!-- Tombol Fullscreen Global (Aktif di Kedua Mode) -->
-<button id="btn-fullscreen" onclick="toggleFullscreen()" title="Layar Penuh" px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 active:scale-95 shrink-0">
+<button id="btn-fullscreen" onclick="toggleFullscreen()" title="Layar Penuh" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 active:scale-95 shrink-0"">
     <i id="icon-fullscreen" class="fa-solid fa-expand"></i>
     <span class="hidden md:inline">Full</span>
 </button>
