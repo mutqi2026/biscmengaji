@@ -4295,13 +4295,13 @@ function stopVideo() {
 }
 
 function goHome() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Panggil fungsi stop untuk iframe
     stopVideo();
     closeAyatAudioBar();
     stopAndCloseAudio()
     stopAudio();
     stopmurojaah();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Sembunyikan semua section
     document.querySelectorAll('main > section').forEach(section => {
         section.classList.add('hidden');
@@ -7879,6 +7879,7 @@ let currentCalDate = new Date();
 function renderCalendar() {
     const grid = document.getElementById('calendar-days-grid');
     const monthYearTitle = document.getElementById('calendar-month-year');
+    const hijriSubTitle = document.getElementById('calendar-hijri-year'); // Element subtitle Hijriah
     if (!grid || !monthYearTitle) return;
 
     const year = currentCalDate.getFullYear();
@@ -7891,9 +7892,45 @@ function renderCalendar() {
 
     monthYearTitle.innerText = `${monthNames[month]} ${year}`;
 
+    // 1. Converter untuk Tanggal Hijriah Per Hari
+    const hijriFormatter = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
+
+    // 2. Converter khusus Nama Bulan & Tahun Hijriah untuk Header Subtitle
+    const hijriMonthYearFormatter = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', {
+        month: 'long',
+        year: 'numeric'
+    });
+
+    // Ambil info Hijriah di awal bulan (tanggal 1) dan akhir bulan
+    const firstDateOfMonth = new Date(year, month, 1);
+    const lastDateOfMonth = new Date(year, month + 1, 0);
+
+    const firstHijriParts = hijriMonthYearFormatter.formatToParts(firstDateOfMonth);
+    const lastHijriParts = hijriMonthYearFormatter.formatToParts(lastDateOfMonth);
+
+    const startHijriMonth = firstHijriParts.find(p => p.type === 'month').value;
+    const endHijriMonth = lastHijriParts.find(p => p.type === 'month').value;
+    const startHijriYear = firstHijriParts.find(p => p.type === 'year').value;
+    const endHijriYear = lastHijriParts.find(p => p.type === 'year').value;
+
+    // Update Subtitle Rentang Bulan & Tahun Hijriah
+    if (hijriSubTitle) {
+        if (startHijriMonth === endHijriMonth) {
+            hijriSubTitle.innerText = `${startHijriMonth} ${startHijriYear} H`;
+        } else if (startHijriYear === endHijriYear) {
+            hijriSubTitle.innerText = `${startHijriMonth} - ${endHijriMonth} ${startHijriYear} H`;
+        } else {
+            hijriSubTitle.innerText = `${startHijriMonth} ${startHijriYear} H - ${endHijriMonth} ${endHijriYear} H`;
+        }
+    }
+
     // Hari pertama & jumlah hari bulan ini
-    const firstDayIndex = new Date(year, month, 1).getDay();
-    const lastDay = new Date(year, month + 1, 0).getDate();
+    const firstDayIndex = firstDateOfMonth.getDay();
+    const lastDay = lastDateOfMonth.getDate();
     
     grid.innerHTML = '';
 
@@ -7904,44 +7941,50 @@ function renderCalendar() {
         grid.appendChild(emptyDiv);
     }
 
-// Render Angka Tanggal dengan Warna Kotak Penuh
-for (let day = 1; day <= lastDay; day++) {
-    const dayDiv = document.createElement('div');
-    const dayOfWeek = new Date(year, month, day).getDay(); // 0: Minggu, 1: Senin, 4: Kamis, dst.
+    // Render Angka Tanggal
+    for (let day = 1; day <= lastDay; day++) {
+        const dayDiv = document.createElement('div');
+        const currentDate = new Date(year, month, day);
+        const dayOfWeek = currentDate.getDay();
 
-    let fastType = null;
-    let bgClass = "bg-white text-slate-800 hover:bg-slate-50"; // Default tanggal biasa
-    let badgeLabel = "";
+        // Konversi tanggal Masehi ke Hijriah per hari
+        const parts = hijriFormatter.formatToParts(currentDate);
+        const hijriDay = parseInt(parts.find(p => p.type === 'day').value, 10);
+        const hijriMonth = parts.find(p => p.type === 'month').value;
 
-    // Tentukan Warna Kotak Berdasarkan Jenis Puasa
-    if (dayOfWeek === 1 || dayOfWeek === 4) {
-        fastType = 'senin_kamis';
-        bgClass = "bg-emerald-100/80 text-emerald-900 border border-emerald-200 hover:bg-emerald-200/80 font-bold";
-        badgeLabel = "Senin-Kamis";
-    } else if (day === 13 || day === 14 || day === 15) {
-        fastType = 'ayyamul_bidh';
-        bgClass = "bg-amber-100/80 text-amber-900 border border-amber-200 hover:bg-amber-200/80 font-bold";
-        badgeLabel = "Ayyamul Bidh";
+        let fastType = null;
+        let bgClass = "bg-white text-slate-800 hover:bg-slate-50";
+        let badgeLabel = "";
+
+        const isTasyrik13 = hijriMonth.toLowerCase().includes('zul') && hijriDay === 13;
+
+        if (dayOfWeek === 1 || dayOfWeek === 4) {
+            fastType = 'senin_kamis';
+            bgClass = "bg-emerald-100/80 text-emerald-900 border border-emerald-200 hover:bg-emerald-200/80 font-bold";
+            badgeLabel = "Senin-Kamis";
+        } else if ([13, 14, 15].includes(hijriDay) && !isTasyrik13) {
+            fastType = 'ayyamul_bidh';
+            bgClass = "bg-amber-100/80 text-amber-900 border border-amber-200 hover:bg-amber-200/80 font-bold";
+            badgeLabel = "Ayyamul Bidh";
+        }
+
+        const today = new Date();
+        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        const todayBadge = isToday ? '<span class="absolute top-1 left-1 text-[8px] bg-blue-600 text-white px-1 py-0.2 rounded font-bold">Hari Ini</span>' : '';
+
+        dayDiv.className = `p-2 sm:p-3 relative flex flex-col items-center justify-between min-h-[60px] sm:min-h-[68px] cursor-pointer transition-all duration-200 rounded-xl m-0.5 ${bgClass}`;
+
+        dayDiv.innerHTML = `
+            ${todayBadge}
+            <span class="text-[9px] sm:text-[10px] opacity-60 self-end font-normal">${hijriDay}</span>
+            <span class="text-sm sm:text-base font-bold my-auto">${day}</span>
+            ${badgeLabel ? `<span class="text-[8px] sm:text-[9px] opacity-90 font-semibold leading-none">${badgeLabel}</span>` : '<span class="text-[8px]">&nbsp;</span>'}
+        `;
+
+        dayDiv.onclick = () => showFastDetail(day, monthNames[month], year, fastType, `${hijriDay} ${hijriMonth}`);
+
+        grid.appendChild(dayDiv);
     }
-
-    // Tanda Khusus Jika Hari Ini
-    const today = new Date();
-    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-    const todayBadge = isToday ? '<span class="absolute top-1 left-1 text-[9px] bg-blue-600 text-white px-1.5 py-0.5 rounded-md font-bold">Hari Ini</span>' : '';
-
-    dayDiv.className = `p-2 sm:p-3 relative flex flex-col items-center justify-center min-h-[56px] sm:min-h-[64px] cursor-pointer transition-all duration-200 rounded-xl m-0.5 ${bgClass}`;
-
-    dayDiv.innerHTML = `
-        ${todayBadge}
-        <span class="text-sm sm:text-base">${day}</span>
-        ${badgeLabel ? `<span class="text-[9px] mt-0.5 opacity-80 font-semibold">${badgeLabel}</span>` : ''}
-    `;
-
-    // Event listener saat tanggal diklik
-    dayDiv.onclick = () => showFastDetail(day, monthNames[month], year, fastType);
-
-    grid.appendChild(dayDiv);
-}
 }
 
 // Ubah Bulan (Prev / Next)
