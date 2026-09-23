@@ -64,6 +64,25 @@
 </div>
    
    <style>
+
+    /* Style khusus untuk memperluas viewer ke seluruh layar HP secara paksa */
+.iqro-mobile-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    z-index: 99999 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 0.75rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    background-color: #0f172a !important; /* bg-slate-900 */
+}
+
   /* Sembunyikan scrollbar untuk tampilan carousel ala aplikasi mobile */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -7080,63 +7099,78 @@ function updateIqroDisplay() {
     }
 }
 
-// Fitur Fullscreen yang Kompatibel dengan Mobile & Desktop
+let isCustomFullscreen = false;
+
 function toggleIqroFullscreen() {
     const viewerCard = document.getElementById('iqro-viewer-card');
-
+    
+    // Coba Jalankan Native Fullscreen jika didukung browser
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        // Masuk ke Mode Fullscreen
         if (viewerCard.requestFullscreen) {
-            viewerCard.requestFullscreen();
-        } else if (viewerCard.webkitRequestFullscreen) { /* Safari / iOS / Webkit */
+            viewerCard.requestFullscreen().catch(() => enableCustomMobileFullscreen());
+        } else if (viewerCard.webkitRequestFullscreen) {
             viewerCard.webkitRequestFullscreen();
-        } else if (viewerCard.msRequestFullscreen) {
-            viewerCard.msRequestFullscreen();
+        } else {
+            // Jika Native API tidak didukung (misal iOS Safari/beberapa browser HP)
+            enableCustomMobileFullscreen();
         }
     } else {
-        // Keluar dari Mode Fullscreen
+        // Keluar dari Native Fullscreen
         if (document.exitFullscreen) {
             document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
+        } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
         }
     }
-}
 
-// Handler Perubahan Tampilan saat Masuk/Keluar Fullscreen
-function handleFullscreenChange() {
-    const viewerCard = document.getElementById('iqro-viewer-card');
-    const btnFullscreen = document.getElementById('btn-fullscreen');
-    const imgDisplay = document.getElementById('iqro-image-display');
-
-    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-
-    if (isFullscreen) {
-        // Ubah Icon ke Compress
-        btnFullscreen.innerHTML = '<i class="fa-solid fa-compress text-base sm:text-sm"></i>';
-        
-        // Atur layout viewerCard mengisi penuh layar HP
-        viewerCard.classList.add('fixed', 'inset-0', 'z-50', 'rounded-none', 'h-screen', 'w-screen', 'justify-between');
-        
-        // Biarkan gambar mengambil tinggi maksimal layar HP
-        imgDisplay.classList.remove('max-h-[65vh]');
-        imgDisplay.classList.add('max-h-[88vh]', 'sm:max-h-[90vh]');
-    } else {
-        // Ubah Icon ke Expand
-        btnFullscreen.innerHTML = '<i class="fa-solid fa-expand text-base sm:text-sm"></i>';
-        
-        // Kembalikan ke tampilan normal
-        viewerCard.classList.remove('fixed', 'inset-0', 'z-50', 'rounded-none', 'h-screen', 'w-screen', 'justify-between');
-        
-        // Kembalikan ukuran gambar semula
-        imgDisplay.classList.remove('max-h-[88vh]', 'sm:max-h-[90vh]');
-        imgDisplay.classList.add('max-h-[65vh]');
+    // Toggle manual jika menggunakan mode Custom Overlay
+    if (isCustomFullscreen) {
+        disableCustomMobileFullscreen();
     }
 }
 
-// Listener untuk mendeteksi perubahan layar penuh (Support Chrome, Safari Mobile, Edge)
+// Mengaktifkan Fullscreen berbasis Overlay CSS (Pasti Berhasil di Mobile)
+function enableCustomMobileFullscreen() {
+    const viewerCard = document.getElementById('iqro-viewer-card');
+    const imgDisplay = document.getElementById('iqro-image-display');
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+
+    viewerCard.classList.add('iqro-mobile-fullscreen');
+    imgDisplay.classList.remove('max-h-[65vh]');
+    imgDisplay.classList.add('max-h-[85vh]');
+    btnFullscreen.innerHTML = '<i class="fa-solid fa-compress text-base sm:text-sm"></i>';
+    
+    // Cegah scroll di halaman utama saat layar penuh
+    document.body.style.overflow = 'hidden';
+    isCustomFullscreen = true;
+}
+
+// Mematikan Fullscreen Overlay CSS
+function disableCustomMobileFullscreen() {
+    const viewerCard = document.getElementById('iqro-viewer-card');
+    const imgDisplay = document.getElementById('iqro-image-display');
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+
+    viewerCard.classList.remove('iqro-mobile-fullscreen');
+    imgDisplay.classList.remove('max-h-[85vh]');
+    imgDisplay.classList.add('max-h-[65vh]');
+    btnFullscreen.innerHTML = '<i class="fa-solid fa-expand text-base sm:text-sm"></i>';
+    
+    // Normalisasi scroll halaman
+    document.body.style.overflow = '';
+    isCustomFullscreen = false;
+}
+
+// Event Listener Sync jika menggunakan Native Browser Fullscreen (misal di PC / Android Chrome)
+function handleFullscreenChange() {
+    const isNativeFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+    if (isNativeFullscreen) {
+        enableCustomMobileFullscreen();
+    } else if (!isCustomFullscreen) {
+        disableCustomMobileFullscreen();
+    }
+}
+
 document.addEventListener('fullscreenchange', handleFullscreenChange);
 document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 </script>
