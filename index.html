@@ -3259,6 +3259,10 @@ audioFiles: [
                 document.querySelectorAll('.ayat-item').forEach(el => el.removeProperty && el.removeAttribute('style'));
                 document.querySelectorAll('.ayat-item').forEach(el => el.classList.remove('bg-sky-50', 'border-sky-300'));
             }
+
+            if (viewId === 'homme' && typeof window.startAutoPlay === 'function') {
+        window.startAutoPlay(); // Paksa slider aktif kembali saat menu dibuka
+    }
         }
 
         /* ================= MODUL 1: AL-QURAN DIGITAL ================= */
@@ -4265,6 +4269,7 @@ function switchView(viewId) {
     }
 
     if (viewId === 'home') {
+    window.startAutoPlay();
     closeAyatAudioBar();
     stopAndCloseAudio()
     stopAudio();
@@ -4924,140 +4929,221 @@ function renderMushafPage(pageNumber) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-        const carousel = document.getElementById('motivationCarousel');
-        const slideTrack = document.getElementById('slideTrack');
-        const originalSlides = document.querySelectorAll('.slide-item');
-        const dots = document.querySelectorAll('.dot-btn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
+document.addEventListener("DOMContentLoaded", () => {
+    const slideTrack = document.getElementById('slideTrack');
+    const carousel = document.getElementById('carousel-container') || slideTrack?.parentElement;
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    
+    // Ambil elemen dots dengan class .dot-btn
+    const dots = document.querySelectorAll('#slideDots .dot-btn');
 
-        const realTotal = originalSlides.length;
-        const INTERVAL_TIME = 5000; // Berpindah tiap 5 detik
-        const TRANSITION_STYLE = 'transform 700ms cubic-bezier(0.25, 1, 0.5, 1)';
+    if (!slideTrack) return;
 
-        // 1. Kloning Slide Pertama dan Terakhir untuk Efek Loop Menerus
-        const firstClone = originalSlides[0].cloneNode(true);
-        const lastClone = originalSlides[realTotal - 1].cloneNode(true);
+    const TRANSITION_STYLE = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+    const INTERVAL_TIME = 4000;
 
-        slideTrack.appendChild(firstClone);
-        slideTrack.insertBefore(lastClone, originalSlides[0]);
+    // 1. PROSES CLONING OTOMATIS (Mencegah Slide Blank)
+    const originalSlides = Array.from(slideTrack.querySelectorAll('.slide-item'));
+    const realTotal = originalSlides.length;
 
-        // Posisi Awal di Index 1 (karena Index 0 adalah lastClone)
-        let currentIndex = 1;
-        let isTransitioning = false;
-        let autoPlayTimer = null;
+    if (realTotal === 0) return;
 
-        // Atur Posisi Track ke Slide Asli Pertama
-        slideTrack.style.transform = `translateX(-100%)`;
+    // Hapus clone lama jika pernah ada
+    slideTrack.querySelectorAll('.slide-clone').forEach(el => el.remove());
 
-        function updateDots(realIndex) {
-            dots.forEach((dot, i) => {
-                if (i === realIndex) {
-                    dot.classList.remove('w-2', 'bg-white/30');
-                    dot.classList.add('w-8', 'bg-amber-400');
-                } else {
-                    dot.classList.remove('w-8', 'bg-amber-400');
-                    dot.classList.add('w-2', 'bg-white/30');
-                }
-            });
-        }
+    // Buat clone slide pertama dan terakhir
+    const firstClone = originalSlides[0].cloneNode(true);
+    const lastClone = originalSlides[realTotal - 1].cloneNode(true);
 
-        function moveToSlide(index, animate = true) {
-            if (isTransitioning && animate) return;
-            isTransitioning = animate;
+    firstClone.classList.add('slide-clone');
+    lastClone.classList.add('slide-clone');
 
-            slideTrack.style.transition = animate ? TRANSITION_STYLE : 'none';
-            slideTrack.style.transform = `translateX(-${index * 100}%)`;
+    // Sisipkan clone ke awal dan akhir track
+    slideTrack.appendChild(firstClone);
+    slideTrack.insertBefore(lastClone, originalSlides[0]);
 
-            // Hitung Index Asli untuk Navigasi Dots
-            let realIndex = index - 1;
-            if (realIndex >= realTotal) realIndex = 0;
-            if (realIndex < 0) realIndex = realTotal - 1;
+    let currentIndex = 1; // Mulai dari slide asli pertama
+    let isTransitioning = false;
+    let autoPlayTimer = null;
 
-            updateDots(realIndex);
-            currentIndex = index;
-        }
+    // Posisi awal track ke Slide 1 Asli
+    slideTrack.style.transition = 'none';
+    slideTrack.style.transform = `translateX(-100%)`;
 
-        function nextSlide() {
-            if (isTransitioning) return;
-            moveToSlide(currentIndex + 1);
-        }
+    // 2. FUNGSI UPDATE TAMPILAN DOTS
+    function updateDots(realIndex) {
+        if (!dots.length) return;
+        dots.forEach((dot, i) => {
+            if (i === realIndex) {
+                dot.classList.remove('w-2', 'bg-white/30', 'hover:bg-white/60');
+                dot.classList.add('w-8', 'bg-amber-400');
+            } else {
+                dot.classList.remove('w-8', 'bg-amber-400');
+                dot.classList.add('w-2', 'bg-white/30', 'hover:bg-white/60');
+            }
+        });
+    }
 
-        function prevSlide() {
-            if (isTransitioning) return;
-            moveToSlide(currentIndex - 1);
-        }
+    function moveToSlide(index, animate = true) {
+        if (isTransitioning && animate) return;
+        isTransitioning = animate;
 
-        // 2. Handle Seamless Teleport (Saat Mencapai Slide Clone)
-        slideTrack.addEventListener('transitionend', () => {
+        slideTrack.style.transition = animate ? TRANSITION_STYLE : 'none';
+        slideTrack.style.transform = `translateX(-${index * 100}%)`;
+
+        // Hitung Index Asli untuk Dots Indicator
+        let realIndex = index - 1;
+        if (realIndex >= realTotal) realIndex = 0;
+        if (realIndex < 0) realIndex = realTotal - 1;
+
+        updateDots(realIndex);
+        currentIndex = index;
+
+        if (!animate) {
             isTransitioning = false;
+        }
+    }
 
-            // Jika lewat slide terakhir (ke firstClone), teleport instan ke Slide 1 Asli
-            if (currentIndex === realTotal + 1) {
-                moveToSlide(1, false);
-            }
+    function nextSlide() {
+        if (isTransitioning) return;
+        moveToSlide(currentIndex + 1);
+    }
 
-            // Jika lewat slide pertama (ke lastClone), teleport instan ke Slide Terakhir Asli
-            if (currentIndex === 0) {
-                moveToSlide(realTotal, false);
-            }
-        });
+    function prevSlide() {
+        if (isTransitioning) return;
+        moveToSlide(currentIndex - 1);
+    }
 
-        // Autoplay Controller
-        function startAutoPlay() {
-            stopAutoPlay();
-            autoPlayTimer = setInterval(nextSlide, INTERVAL_TIME);
+    // 3. SEAMLESS TELEPORT (Looping Tanpa Jeda/Blank)
+    slideTrack.addEventListener('transitionend', () => {
+        isTransitioning = false;
+
+        if (currentIndex === realTotal + 1) {
+            moveToSlide(1, false);
         }
 
-        function stopAutoPlay() {
-            if (autoPlayTimer) clearInterval(autoPlayTimer);
+        if (currentIndex === 0) {
+            moveToSlide(realTotal, false);
         }
+    });
 
-        window.goToSlide = function(realIndex) {
-            if (isTransitioning) return;
-            moveToSlide(realIndex + 1);
-            startAutoPlay();
-        };
-
-        // Event Buttons
-        nextBtn.addEventListener('click', () => {
+    // 4. AUTOPLAY & INTERAKSI GLOBAL
+    window.startAutoPlay = function() {
+        window.stopAutoPlay();
+        isTransitioning = false;
+        autoPlayTimer = setInterval(() => {
             nextSlide();
-            startAutoPlay();
-        });
+        }, INTERVAL_TIME);
+    };
 
-        prevBtn.addEventListener('click', () => {
-            prevSlide();
-            startAutoPlay();
-        });
+    window.stopAutoPlay = function() {
+        if (autoPlayTimer) {
+            clearInterval(autoPlayTimer);
+            autoPlayTimer = null;
+        }
+    };
 
-        // Hover & Touch Behavior
-        carousel.addEventListener('mouseenter', stopAutoPlay);
-        carousel.addEventListener('mouseleave', startAutoPlay);
+    // Fungsi klik Dots yang dipanggil dari HTML (onclick="goToSlide(...)")
+    window.goToSlide = function(realIndex) {
+        if (isTransitioning) return;
+        moveToSlide(realIndex + 1);
+        window.startAutoPlay();
+    };
+
+    // MODIFIKASI FUNGSI NEXT & PREV SLIDE DENGAN BINDING TRANSITIONEND SAFEGUARD
+
+function nextSlide() {
+    // Jika sedang dalam proses transisi, abaikan klik cepat agar tidak macet
+    if (isTransitioning) return;
+    moveToSlide(currentIndex + 1);
+}
+
+function prevSlide() {
+    if (isTransitioning) return;
+    moveToSlide(currentIndex - 1);
+}
+
+// UPDATE EVENT LISTENER UNTUK SEAMLESS TELEPORT
+slideTrack.addEventListener('transitionend', (e) => {
+    // Pastikan event datang dari transform slideTrack, bukan dari child element
+    if (e.target !== slideTrack) return;
+
+    isTransitioning = false;
+
+    // Jika lewat dari slide terakhir (di slide firstClone), teleport instan ke Slide 1 Asli
+    if (currentIndex >= realTotal + 1) {
+        moveToSlide(1, false);
+    }
+
+    // Jika kurang dari slide pertama (di slide lastClone), teleport instan ke Slide Terakhir Asli
+    if (currentIndex <= 0) {
+        moveToSlide(realTotal, false);
+    }
+});
+
+// AKTIFKAN EVENT TOMBOL NEXT & PREV DENGAN FORCE RESET
+if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Proteksi tambahan: Jika macet di ujung clone, paksa reset posisi
+        if (currentIndex >= realTotal + 1) {
+            moveToSlide(1, false);
+        }
+        
+        nextSlide();
+        window.startAutoPlay();
+    });
+}
+
+if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Proteksi tambahan: Jika macet di awal clone, paksa reset posisi
+        if (currentIndex <= 0) {
+            moveToSlide(realTotal, false);
+        }
+
+        prevSlide();
+        window.startAutoPlay();
+    });
+}
+
+    // EVENT HOVER & TOUCH
+    if (carousel) {
+        carousel.addEventListener('mouseenter', window.stopAutoPlay);
+        carousel.addEventListener('mouseleave', window.startAutoPlay);
 
         let touchStartX = 0;
         let touchEndX = 0;
 
         carousel.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
-            stopAutoPlay();
+            window.stopAutoPlay();
         }, { passive: true });
 
         carousel.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-            startAutoPlay();
+            if (touchEndX < touchStartX - 40) nextSlide();
+            if (touchEndX > touchStartX + 40) prevSlide();
+            window.startAutoPlay();
         }, { passive: true });
+    }
 
-        function handleSwipe() {
-            const threshold = 40;
-            if (touchEndX < touchStartX - threshold) nextSlide();
-            if (touchEndX > touchStartX + threshold) prevSlide();
+    // EVENT VISIBILITY TAB BROWSER
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            window.stopAutoPlay();
+        } else {
+            window.startAutoPlay();
         }
-
-        // Inisialisasi Autoplay
-        startAutoPlay();
     });
+
+    // Jalankan Autoplay Pertama Kali
+    window.startAutoPlay();
+});
 
    const quranStoriesData = [
   {
@@ -5564,6 +5650,7 @@ function openStoryModal(storyId) {
   if (!story) return;
 
   const modal = document.getElementById("storyDetailModal");
+  if (!modal) return;
   
   document.getElementById("modalCategoryIcon").className = `w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm shadow-sm ${story.iconBg}`;
   document.getElementById("modalCategoryIcon").innerHTML = `<i class="fa-solid ${story.icon}"></i>`;
@@ -5576,15 +5663,31 @@ function openStoryModal(storyId) {
   document.getElementById("modalTitle").innerText = story.title;
   document.getElementById("modalContent").innerHTML = story.fullStory;
 
+  // 1. Tampilkan modal
   modal.classList.remove("hidden");
+
+  // 2. Scroll otomatis ke tengah layar
+  modal.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center'
+  });
+
+  // 3. Mencegah background di-scroll saat modal terbuka
+  document.body.style.overflow = 'hidden';
+
+  // 4. Jalankan animasi fade-in & scale-in
   setTimeout(() => {
     modal.classList.remove("opacity-0");
-    modal.querySelector("> div").classList.remove("scale-95");
+    const modalCard = modal.querySelector("div");
+    if (modalCard) {
+      modalCard.classList.remove("scale-95");
+      modalCard.classList.add("scale-100");
+    }
   }, 10);
 }
 
 function closeStoryModal(e) {
-  // Cegah perilaku default tombol (seperti refresh halaman atau submit form)
+  // Cegah perilaku default tombol
   if (e && e.preventDefault) {
     e.preventDefault();
   }
@@ -5592,14 +5695,19 @@ function closeStoryModal(e) {
   const modal = document.getElementById("storyDetailModal");
   if (!modal) return;
 
-  // Seleksi div anak pertama di dalam modal secara aman
   const modalCard = modal.querySelector("div");
 
+  // 1. Jalankan animasi close (fade-out & scale-down)
   modal.classList.add("opacity-0");
   if (modalCard) {
+    modalCard.classList.remove("scale-100");
     modalCard.classList.add("scale-95");
   }
+
+  // 2. Kembalikan fungsi scroll pada halaman utama
+  document.body.style.overflow = 'auto';
   
+  // 3. Sembunyikan elemen setelah animasi selesai
   setTimeout(() => {
     modal.classList.add("hidden");
     // Kembalikan status auto-scroll agar carousel berputar kembali
@@ -5653,18 +5761,27 @@ let currentVocabCategory = 'all';
 // Fungsi Render Utama
 function renderArabicVocab() {
     const container = document.getElementById('vocab-grid-container');
-    const searchInput = document.getElementById('search-vocab').value.toLowerCase().trim();
+    const searchEl = document.getElementById('search-vocab');
+    
+    // Ambil value input pencarian dengan aman
+    const searchInput = searchEl ? searchEl.value.toLowerCase().trim() : '';
 
     if (!container) return;
+
+    // Safety Check jika data belum dimuat
+    if (typeof arabicVocabData === 'undefined' || !arabicVocabData) {
+        console.error("Data 'arabicVocabData' belum terdefinisi.");
+        return;
+    }
 
     // Filter berdasarkan Kategori dan Search Query
     const filteredData = arabicVocabData.filter(item => {
         const matchesCategory = (currentVocabCategory === 'all') || (item.category === currentVocabCategory);
         
-        const matchesSearch = item.word.includes(searchInput) ||
-                              item.latin.toLowerCase().includes(searchInput) ||
-                              item.meaning.toLowerCase().includes(searchInput) ||
-                              item.surah.toLowerCase().includes(searchInput);
+        const matchesSearch = (item.word && item.word.includes(searchInput)) ||
+                              (item.latin && item.latin.toLowerCase().includes(searchInput)) ||
+                              (item.meaning && item.meaning.toLowerCase().includes(searchInput)) ||
+                              (item.surah && item.surah.toLowerCase().includes(searchInput));
 
         return matchesCategory && matchesSearch;
     });
@@ -5706,7 +5823,7 @@ function renderArabicVocab() {
 function filterVocabCategory(cat) {
     currentVocabCategory = cat;
 
-    // Reset Stylesemua Tombol
+    // Reset Style semua Tombol
     document.querySelectorAll('.vocab-cat-btn').forEach(btn => {
         btn.className = "vocab-cat-btn px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold rounded-xl text-xs shrink-0 hover:border-blue-500";
     });
@@ -5729,6 +5846,18 @@ function getCategoryLabel(cat) {
         default: return 'Kosakata';
     }
 }
+
+// OTOMATIS RENDER SAAT HALAMAN SELESAI DIMUAT
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Render data kosakata pertama kali
+    renderArabicVocab();
+
+    // 2. Event Listener untuk Input Pencarian (Live Search)
+    const searchEl = document.getElementById('search-vocab');
+    if (searchEl) {
+        searchEl.addEventListener('input', renderArabicVocab);
+    }
+});
 
 // Pelafalan Suara Arab (Web Speech API)
 function playArabicAudio(text) {
