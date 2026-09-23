@@ -7658,6 +7658,7 @@ function playDoaAudio(url, btnEl) {
 }
 
 function openDoaView() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
     
     const doaView = document.getElementById('view-doa');
@@ -7708,6 +7709,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 2. Perbarui fungsi openPuasaView dengan setTimeout agar elemen HTML siap
 function openPuasaView() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Sembunyikan semua section/view lain
     document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
 
@@ -8085,6 +8087,7 @@ function getLocationAndSetCity() {
 }
 
 function openHadisView() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Sembunyikan semua section/view lain
     document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
 
