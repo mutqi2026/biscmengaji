@@ -1002,6 +1002,72 @@ body.dark-mode footer{
 }
 </style>
 
+
+<style id="bisc-ai-premium">
+/* ================= AI PREMIUM LAYER ================= */
+:root{
+  --ai-ink:#0b1220;--ai-muted:#64748b;--ai-line:rgba(148,163,184,.22);
+  --ai-glass:rgba(255,255,255,.82);--ai-shadow:0 24px 70px rgba(15,23,42,.18);
+}
+.dark{--ai-ink:#f8fafc;--ai-muted:#94a3b8;--ai-line:rgba(148,163,184,.16);--ai-glass:rgba(15,23,42,.88);--ai-shadow:0 30px 90px rgba(0,0,0,.45)}
+#bisc-ai-fab{position:fixed;right:24px;bottom:24px;z-index:9998;width:64px;height:64px;border:0;border-radius:22px;cursor:pointer;color:white;background:linear-gradient(135deg,#0ea5e9,#2563eb 55%,#7c3aed);box-shadow:0 18px 45px rgba(37,99,235,.38);transition:.25s}
+#bisc-ai-fab:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 24px 55px rgba(37,99,235,.48)}
+#bisc-ai-fab .ai-pulse{position:absolute;inset:-5px;border:1px solid rgba(56,189,248,.35);border-radius:25px;animation:aiPulse 2.2s infinite}
+@keyframes aiPulse{0%,100%{transform:scale(.95);opacity:.2}50%{transform:scale(1.08);opacity:.7}}
+#bisc-ai-modal{position:fixed;inset:0;z-index:9997;display:none;align-items:flex-end;justify-content:flex-end;padding:24px;background:rgba(2,6,23,.34);backdrop-filter:blur(10px)}
+#bisc-ai-modal.open{display:flex}
+#bisc-ai-panel{width:min(560px,calc(100vw - 28px));height:min(760px,calc(100vh - 48px));display:flex;flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.28);border-radius:30px;background:var(--ai-glass);box-shadow:var(--ai-shadow);backdrop-filter:blur(24px);animation:aiIn .28s ease}
+@keyframes aiIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.ai-head{padding:20px 20px 16px;background:linear-gradient(135deg,rgba(14,165,233,.16),rgba(124,58,237,.14));border-bottom:1px solid var(--ai-line)}
+.ai-avatar{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;color:white;background:linear-gradient(135deg,#06b6d4,#2563eb,#7c3aed);box-shadow:0 10px 25px rgba(37,99,235,.25)}
+.ai-close{width:38px;height:38px;border:1px solid var(--ai-line);border-radius:12px;background:rgba(255,255,255,.35);color:var(--ai-ink);cursor:pointer}
+.dark .ai-close{background:rgba(15,23,42,.55)}
+.ai-tabs{display:flex;gap:7px;padding:10px 12px;border-bottom:1px solid var(--ai-line)}
+.ai-tab{flex:1;border:1px solid transparent;border-radius:12px;padding:9px 8px;font-size:12px;font-weight:700;color:var(--ai-muted);background:transparent;cursor:pointer}
+.ai-tab.active{color:#0369a1;background:rgba(14,165,233,.12);border-color:rgba(14,165,233,.18)}
+.dark .ai-tab.active{color:#7dd3fc}
+.ai-view{display:none;min-height:0;flex:1}
+.ai-view.active{display:flex;flex-direction:column}
+#bisc-ai-messages{flex:1;overflow:auto;padding:18px}
+.ai-msg{display:flex;gap:9px;margin-bottom:14px;animation:msgIn .2s ease}
+.ai-msg.user{justify-content:flex-end}
+.ai-bubble{max-width:85%;padding:12px 14px;border-radius:18px;font-size:13px;line-height:1.65;color:var(--ai-ink);background:rgba(241,245,249,.82);border:1px solid var(--ai-line)}
+.dark .ai-bubble{background:rgba(30,41,59,.78)}
+.ai-msg.user .ai-bubble{color:white;background:linear-gradient(135deg,#2563eb,#4f46e5);border:0;border-bottom-right-radius:6px}
+.ai-msg.bot .ai-bubble{border-bottom-left-radius:6px}
+@keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ai-suggest{display:flex;gap:7px;overflow:auto;padding:0 16px 12px}
+.ai-chip{white-space:nowrap;border:1px solid var(--ai-line);border-radius:999px;padding:8px 11px;background:rgba(255,255,255,.45);color:var(--ai-muted);font-size:11px;cursor:pointer}
+.dark .ai-chip{background:rgba(30,41,59,.6)}
+.ai-inputbar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--ai-line);background:rgba(255,255,255,.35)}
+.dark .ai-inputbar{background:rgba(2,6,23,.35)}
+#bisc-ai-input{flex:1;resize:none;min-height:46px;max-height:110px;border:1px solid var(--ai-line);border-radius:16px;padding:12px 13px;outline:0;background:rgba(255,255,255,.7);color:var(--ai-ink);font-size:13px}
+.dark #bisc-ai-input{background:rgba(15,23,42,.75)}
+#bisc-ai-send{width:48px;border:0;border-radius:16px;color:white;background:linear-gradient(135deg,#0ea5e9,#4f46e5);cursor:pointer}
+.ai-quiz-wrap{padding:18px;overflow:auto}
+.ai-quiz-card{padding:20px;border:1px solid var(--ai-line);border-radius:22px;background:rgba(255,255,255,.42)}
+.dark .ai-quiz-card{background:rgba(15,23,42,.5)}
+.ai-option{width:100%;text-align:left;padding:12px 14px;margin-top:9px;border:1px solid var(--ai-line);border-radius:14px;background:rgba(255,255,255,.52);color:var(--ai-ink);cursor:pointer;transition:.2s}
+.dark .ai-option{background:rgba(30,41,59,.65)}
+.ai-option:hover{transform:translateX(2px);border-color:rgba(14,165,233,.45)}
+.ai-option.correct{border-color:#10b981;background:rgba(16,185,129,.12)}
+.ai-option.wrong{border-color:#ef4444;background:rgba(239,68,68,.10)}
+.ai-score{font-size:30px;font-weight:900;background:linear-gradient(90deg,#0284c7,#7c3aed);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ai-quiz-settings{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:15px}
+.ai-quiz-settings select,.ai-quiz-settings input{width:100%;padding:11px;border:1px solid var(--ai-line);border-radius:13px;background:rgba(255,255,255,.55);color:var(--ai-ink);outline:0}
+.dark .ai-quiz-settings select,.dark .ai-quiz-settings input{background:rgba(30,41,59,.65)}
+.ai-primary{border:0;border-radius:14px;padding:11px 15px;font-weight:800;color:white;background:linear-gradient(135deg,#0284c7,#4f46e5);cursor:pointer}
+.ai-secondary{border:1px solid var(--ai-line);border-radius:14px;padding:10px 14px;font-weight:700;color:var(--ai-ink);background:rgba(255,255,255,.45);cursor:pointer}
+.ai-typing span{display:inline-block;width:5px;height:5px;border-radius:50%;background:#64748b;margin:0 2px;animation:typing 1s infinite}
+.ai-typing span:nth-child(2){animation-delay:.15s}.ai-typing span:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
+@media(max-width:640px){
+ #bisc-ai-fab{right:16px;bottom:16px;width:58px;height:58px;border-radius:19px}
+ #bisc-ai-modal{padding:10px}
+ #bisc-ai-panel{width:100%;height:calc(100vh - 20px);border-radius:24px}
+ .ai-quiz-settings{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-32 transition-colors duration-300">
 
@@ -1170,6 +1236,15 @@ body.dark-mode footer{
                     <span class="font-bold text-slate-800 text-base group-hover:text-sky-700 transition-colors">Al-Qur'an</span>
                     <span class="text-xs text-slate-400 mt-1 font-medium">Membaca & Audio</span>
                 </button>
+
+<!-- Tombol Menu Iqro (Nuansa Biru) -->
+<button onclick="openIqro()" class="flex flex-col items-center justify-center bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-xl hover:border-blue-400/60 transition-all duration-300 ease-out transform hover:-translate-y-1.5 group">
+    <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-inner group-hover:shadow-lg group-hover:scale-110">
+        <i class="fa-solid fa-book-quran"></i>
+    </div>
+    <span class="font-bold text-slate-800 text-base group-hover:text-blue-700 transition-colors">Iqro Digital</span>
+    <span class="text-xs text-slate-400 mt-1 font-medium">Belajar Iqro 1 - 6</span>
+</button>
                
                 <button onclick="openMurojaah()" class="flex flex-col items-center justify-center bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-xl hover:border-amber-400/60 transition-all duration-300 ease-out transform hover:-translate-y-1.5 group">
                     <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 text-2xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300 shadow-inner group-hover:shadow-lg group-hover:scale-110">
@@ -1196,12 +1271,8 @@ body.dark-mode footer{
                     <span class="font-bold text-slate-800 text-base group-hover:text-rose-600 transition-colors">Menghafal</span>
                     <span class="text-xs text-slate-400 mt-1 font-medium">Panduan Audio</span>
                 </button>
-            </div>
 
-            <!-- 4 Tombol Utama Tambahan -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
-
-  <!-- Tombol 1: Waktu Sholat -->
+                  <!-- Tombol 1: Waktu Sholat -->
   <button onclick="openWaktuSholat()" class="flex flex-col items-center justify-center bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-xl hover:border-emerald-400/60 transition-all duration-300 ease-out transform hover:-translate-y-1.5 group">
     <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-inner group-hover:shadow-lg group-hover:scale-110">
       <i class="fa-solid fa-clock"></i>
@@ -1237,7 +1308,8 @@ body.dark-mode footer{
   <span class="text-xs text-slate-400 mt-1 font-medium">Pagi & Petang</span>
 </button>
 
-</div>            
+            </div>
+        
             
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80">
                 <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2.5 text-base">
@@ -1324,10 +1396,65 @@ body.dark-mode footer{
         </div>
     </div>
 </div>
-
         </section>
 
         
+ <!-- ==================== VIEW: IQRO DIGITAL (BLUE THEME) ==================== -->
+<section id="view-iqro" class="view-panel hidden space-y-6 max-w-5xl mx-auto">
+    <!-- Header Banner Iqro (Gradient Biru) -->
+    <div class="bg-gradient-to-br from-blue-700 via-sky-800 to-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-lg border border-blue-600/30">
+        <button onclick="goHome()" class="text-xs text-blue-200 font-bold flex items-center gap-2 mb-4 hover:underline">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+        </button>
+        <h2 class="text-2xl font-bold mb-1 flex items-center gap-2.5">
+            <i class="fa-solid fa-book-quran text-blue-300"></i> Iqro Digital
+        </h2>
+        <p class="text-xs sm:text-sm text-blue-100/90">Pilih jilid Iqro untuk mulai belajar membaca Al-Qur'an.</p>
+    </div>
+
+    <!-- Pilihan Jilid Iqro (1 - 6) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <button onclick="loadIqroVolume(1)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 1</button>
+        <button onclick="loadIqroVolume(2)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 2</button>
+        <button onclick="loadIqroVolume(3)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 3</button>
+        <button onclick="loadIqroVolume(4)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 4</button>
+        <button onclick="loadIqroVolume(5)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 5</button>
+        <button onclick="loadIqroVolume(6)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 6</button>
+    </div>
+
+    <!-- Container Viewer Gambar Iqro -->
+    <div id="iqro-viewer-card" class="bg-slate-900 p-4 md:p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border border-slate-800 transition-all">
+        <!-- Control Bar (Navigasi + Tombol Fullscreen) -->
+        <div class="flex items-center justify-between w-full max-w-2xl bg-slate-800/90 backdrop-blur-md px-4 py-2.5 rounded-2xl text-white border border-slate-700/50 shadow-inner">
+            <!-- Navigasi Sebelum -->
+            <button onclick="changeIqroPage(-1)" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow">
+                <i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">Prev</span>
+            </button>
+
+            <!-- Informasi Halaman -->
+            <span id="iqro-page-info" class="text-xs sm:text-sm font-semibold tracking-wide text-blue-200">
+                Iqro 1 - Halaman 1 / 30
+            </span>
+
+            <div class="flex items-center gap-2">
+                <!-- Navigasi Sesudah -->
+                <button onclick="changeIqroPage(1)" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow">
+                    <span class="hidden sm:inline">Next</span> <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+                <!-- Tombol Fullscreen -->
+                <button onclick="toggleIqroFullscreen()" id="btn-fullscreen" title="Layar Penuh" class="p-2 bg-slate-700 hover:bg-slate-600 text-blue-300 hover:text-white rounded-xl text-xs transition-all active:scale-95 border border-slate-600">
+                    <i class="fa-solid fa-expand text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Area Tampilan Gambar Iqro -->
+        <div class="w-full flex justify-center items-center overflow-auto rounded-2xl bg-slate-950 p-2 border border-slate-800/80">
+            <img id="iqro-image-display" src="img/iqro/iqro1/1.jpg" alt="Halaman Iqro" class="max-h-[70vh] w-auto object-contain rounded-lg shadow-md transition-all duration-200">
+        </div>
+    </div>
+</section>
 
         <!-- ==================== VIEW 2: QURAN ==================== -->
 <section id="view-quran" class="view-panel space-y-3 md:space-y-4 w-full max-w-[1400px] mx-auto px-2 sm:px-4 transition-all">
@@ -6705,4 +6832,294 @@ window.openTahsin = function() {
     </div>
 </footer>
 
+
+<script id="bisc-ai-engine">
+/* ================= BISC AI ENGINE =================
+   Secure production mode:
+   Set BISC_AI_CONFIG.endpoint to your own backend proxy.
+   Never put a secret API key in this HTML file.
+*/
+const BISC_AI_CONFIG = {
+  endpoint: "", // contoh: "/api/bisc-ai"
+  model: "gpt-5.6",
+  appName: "BISC Mengaji"
+};
+
+const BISCAI = (() => {
+  const state = {
+    history: [],
+    quiz: null,
+    score: 0,
+    answered: false
+  };
+
+  const $ = id => document.getElementById(id);
+
+  function open(){
+    $('bisc-ai-modal').classList.add('open');
+    $('bisc-ai-modal').setAttribute('aria-hidden','false');
+    if(!$('bisc-ai-messages').children.length){
+      addMessage('bot','Assalamu’alaikum 👋 Saya <b>BISC AI</b>. Saya siap membantu belajar Al-Qur’an, tajwid, hafalan, dan murojaah. Silakan bertanya.');
+    }
+    setTimeout(()=>$('bisc-ai-input').focus(),100);
+  }
+  function close(){
+    $('bisc-ai-modal').classList.remove('open');
+    $('bisc-ai-modal').setAttribute('aria-hidden','true');
+  }
+  function tab(name){
+    document.querySelectorAll('.ai-tab').forEach(x=>x.classList.toggle('active',x.dataset.aiTab===name));
+    $('bisc-ai-chat-view').classList.toggle('active',name==='chat');
+    $('bisc-ai-quiz-view').classList.toggle('active',name==='quiz');
+    if(name==='quiz' && !$('bisc-ai-quiz-content').innerHTML) renderQuizHome();
+  }
+  function addMessage(role, text){
+    const wrap=document.createElement('div'); wrap.className='ai-msg '+role;
+    const bubble=document.createElement('div'); bubble.className='ai-bubble'; bubble.innerHTML=text;
+    wrap.appendChild(bubble); $('bisc-ai-messages').appendChild(wrap);
+    $('bisc-ai-messages').scrollTop=$('bisc-ai-messages').scrollHeight;
+    return wrap;
+  }
+  function typing(){
+    return addMessage('bot','<span class="ai-typing"><span></span><span></span><span></span></span>');
+  }
+  async function ask(text){
+    $('bisc-ai-input').value=text; await send();
+  }
+  async function send(){
+    const input=$('bisc-ai-input'), text=input.value.trim();
+    if(!text) return;
+    input.value=''; input.style.height='46px';
+    addMessage('user',escapeHtml(text));
+    state.history.push({role:'user',content:text});
+    const t=typing();
+    try{
+      const answer=await callAI(text);
+      t.remove();
+      addMessage('bot',formatAI(answer));
+      state.history.push({role:'assistant',content:answer});
+    }catch(e){
+      t.remove();
+      addMessage('bot','Maaf, AI sedang belum terhubung ke server. <b>BISC AI Demo</b> tetap dapat membantu dengan jawaban dasar. Untuk AI penuh, hubungkan <code>BISC_AI_CONFIG.endpoint</code> ke backend API Anda.');
+      const fallback=localAnswer(text);
+      if(fallback) addMessage('bot',fallback);
+    }
+  }
+  async function callAI(text){
+    if(!BISC_AI_CONFIG.endpoint) {
+      await new Promise(r=>setTimeout(r,550));
+      const fallback=localAnswer(text);
+      if(fallback) return fallback;
+      return 'Untuk jawaban AI penuh, sambungkan BISC AI ke backend API. Saat ini mode demo aktif.';
+    }
+    const res=await fetch(BISC_AI_CONFIG.endpoint,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:BISC_AI_CONFIG.model,message:text,history:state.history,app:BISC_AI_CONFIG.appName})
+    });
+    if(!res.ok) throw new Error('AI request failed');
+    const data=await res.json();
+    return data.answer || data.output || data.message || 'AI tidak mengembalikan jawaban.';
+  }
+  function localAnswer(q){
+    const x=q.toLowerCase();
+    if(x.includes('mad')) return 'Mad adalah bacaan panjang dalam Al-Qur’an. Secara sederhana, huruf mad dapat membuat suara dibaca lebih panjang sesuai kaidah tajwid.';
+    if(x.includes('al-ikhlas')||x.includes('al ikhlas')) return 'Surat Al-Ikhlas menjelaskan keesaan Allah: Allah Maha Esa, tempat bergantung, tidak beranak dan tidak diperanakkan, serta tidak ada sesuatu pun yang setara dengan-Nya.';
+    if(x.includes('hafal')||x.includes('hafalan')) return 'Tips hafalan: baca ayat perlahan, ulangi beberapa kali, dengarkan murattal, hafalkan sedikit demi sedikit, lalu lakukan murojaah tanpa melihat mushaf.';
+    if(x.includes('tajwid')) return 'Tajwid adalah ilmu untuk membaca Al-Qur’an dengan benar, termasuk makhraj, sifat huruf, panjang-pendek bacaan, dan hukum bacaan.';
+    return '';
+  }
+  function renderQuizHome(){
+    $('bisc-ai-quiz-content').innerHTML=`
+      <div class="ai-quiz-card">
+        <div class="text-[11px] uppercase tracking-widest font-bold text-sky-600 dark:text-sky-400">Personal Learning</div>
+        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mt-1">AI Quiz Murojaah</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 mb-4">Quiz adaptif sederhana untuk melatih hafalan dan pemahaman.</p>
+        <div class="ai-quiz-settings">
+          <select id="aiQuizTopic">
+            <option value="surat">Surat Pendek</option>
+            <option value="tajwid">Tajwid Dasar</option>
+            <option value="makna">Pemahaman Al-Qur’an</option>
+          </select>
+          <select id="aiQuizLevel">
+            <option value="mudah">Mudah</option>
+            <option value="sedang">Sedang</option>
+            <option value="menantang">Menantang</option>
+          </select>
+        </div>
+        <button class="ai-primary w-full" onclick="BISCAI.startQuiz()"><i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Buat Quiz dengan AI</button>
+      </div>`;
+  }
+  function startQuiz(){
+    const topic=$('aiQuizTopic')?.value||'surat', level=$('aiQuizLevel')?.value||'mudah';
+    const questions=makeQuestions(topic,level);
+    state.quiz={questions,index:0}; state.score=0; state.answered=false; renderQuestion();
+  }
+  function makeQuestions(topic,level){
+    const banks={
+      surat:[
+        ['Surat apakah yang menjelaskan bahwa Allah itu Maha Esa?',['Al-Ikhlas','Al-Falaq','An-Nas','Al-Kautsar'],0],
+        ['Berapa ayat dalam surat Al-Ikhlas?',['3','4','5','6'],1],
+        ['Surat Al-Ikhlas termasuk surat yang pendek dan mudah untuk…',['Dihafalkan','Dilupakan','Dihapus','Ditinggalkan'],0],
+        ['Kepada siapa kita bergantung dan memohon pertolongan?',['Allah','Harta','Benda','Kekuatan manusia'],0]
+      ],
+      tajwid:[
+        ['Apa yang dimaksud dengan mad?',['Bacaan panjang','Bacaan samar','Bacaan dengung saja','Berhenti membaca'],0],
+        ['Tajwid membantu kita membaca Al-Qur’an dengan…',['Sembarangan','Benar sesuai kaidah','Sangat cepat','Tanpa memperhatikan huruf'],1],
+        ['Makhraj berkaitan dengan…',['Tempat keluarnya huruf','Jumlah ayat','Nama surat','Jumlah halaman'],0],
+        ['Saat belajar tajwid, kita perlu memperhatikan panjang dan…',['Pendek bacaan','Warna mushaf','Ukuran layar','Nomor halaman saja'],0]
+      ],
+      makna:[
+        ['Pokok utama surat Al-Ikhlas adalah…',['Keesaan Allah','Kisah Nabi Musa','Hukum waris','Perjalanan hijrah'],0],
+        ['“Ash-Shamad” secara umum menggambarkan Allah sebagai…',['Tempat bergantung','Seorang manusia','Tempat tinggal','Sebuah benda'],0],
+        ['Surat Al-Ikhlas mengajarkan bahwa tidak ada yang…',['Setara dengan Allah','Boleh belajar','Bisa membaca','Mempunyai nama'],0],
+        ['Belajar Al-Qur’an sebaiknya dilakukan dengan…',['Tekun dan murojaah','Sekali saja','Terburu-buru','Tanpa guru'],0]
+      ]
+    };
+    let q=[...(banks[topic]||banks.surat)];
+    if(level==='menantang') q=q.reverse();
+    return q;
+  }
+  function renderQuestion(){
+    const q=state.quiz.questions[state.quiz.index];
+    if(!q){return renderQuizResult();}
+    state.answered=false;
+    $('bisc-ai-quiz-content').innerHTML=`
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold text-slate-500">Pertanyaan ${state.quiz.index+1}/${state.quiz.questions.length}</span>
+        <span class="ai-score">${state.score}</span>
+      </div>
+      <div class="ai-quiz-card">
+        <div class="text-[11px] font-bold uppercase tracking-widest text-violet-600 dark:text-violet-400 mb-3">AI Challenge</div>
+        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">${escapeHtml(q[0])}</h3>
+        <div id="aiOptions">${q[1].map((o,i)=>`<button class="ai-option" onclick="BISCAI.answer(${i})">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</button>`).join('')}</div>
+        <div id="aiQuizFeedback" class="text-xs mt-4 min-h-[20px]"></div>
+      </div>`;
+  }
+  function answer(i){
+    if(state.answered)return; state.answered=true;
+    const q=state.quiz.questions[state.quiz.index], opts=document.querySelectorAll('.ai-option');
+    opts.forEach((b,n)=>{if(n===q[2])b.classList.add('correct'); if(n===i&&i!==q[2])b.classList.add('wrong')});
+    const ok=i===q[2]; if(ok)state.score++;
+    $('aiQuizFeedback').innerHTML=ok?'<span class="text-emerald-600 font-bold">✓ Benar! MasyaAllah.</span>':'<span class="text-red-500 font-bold">Belum tepat.</span> Jawaban benar: <b>'+escapeHtml(q[1][q[2]])+'</b>';
+    setTimeout(()=>{state.quiz.index++;renderQuestion()},850);
+  }
+  function renderQuizResult(){
+    $('bisc-ai-quiz-content').innerHTML=`
+      <div class="ai-quiz-card text-center">
+        <div class="text-4xl mb-3">🎉</div>
+        <div class="text-xs uppercase tracking-widest font-bold text-slate-500">Hasil Murojaah</div>
+        <div class="ai-score my-2">${state.score}/${state.quiz.questions.length}</div>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-5">${state.score===state.quiz.questions.length?'MasyaAllah, semua benar!':'Terus berlatih dan ulangi lagi agar hafalan semakin kuat.'}</p>
+        <button class="ai-primary" onclick="BISCAI.startQuiz()">Coba Lagi</button>
+      </div>`;
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+  function formatAI(s){return escapeHtml(s).replace(/\*\*(.*?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>')}
+  return {open,close,tab,ask,send,startQuiz,answer};
+})();
+window.BISCAI=BISCAI;
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')BISCAI.close()});
+document.addEventListener('DOMContentLoaded',()=>{
+  const input=document.getElementById('bisc-ai-input');
+  if(input) input.addEventListener('input',()=>{input.style.height='46px';input.style.height=Math.min(input.scrollHeight,110)+'px'});
+});
+
+// Configuration Data Iqro (Sesuaikan total halaman & path folder gambar)
+const iqroData = {
+    1: { totalPages: 33, folder: 'iqro/iqro1' },
+    2: { totalPages: 31, folder: 'iqro/iqro2' },
+    3: { totalPages: 31, folder: 'iqro/iqro3' },
+    4: { totalPages: 31, folder: 'iqro/iqro4' },
+    5: { totalPages: 31, folder: 'iqro/iqro5' },
+    6: { totalPages: 32, folder: 'iqro/iqro6' },
+};
+
+let currentIqroVol = 1;
+let currentIqroPage = 1;
+
+// Membuka Halaman Iqro
+function openIqro() {
+    document.querySelectorAll('.view-panel').forEach(el => el.classList.add('hidden'));
+    const viewIqro = document.getElementById('view-iqro');
+    if (viewIqro) {
+        viewIqro.classList.remove('hidden');
+        loadIqroVolume(1);
+    }
+}
+
+// Pindah Jilid Iqro
+function loadIqroVolume(vol) {
+    currentIqroVol = vol;
+    currentIqroPage = 1;
+    updateIqroDisplay();
+}
+
+// Navigasi Halaman
+function changeIqroPage(delta) {
+    const totalPages = iqroData[currentIqroVol].totalPages;
+    const newPage = currentIqroPage + delta;
+
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentIqroPage = newPage;
+        updateIqroDisplay();
+    }
+}
+
+// Perbarui Tampilan Gambar & Label
+function updateIqroDisplay() {
+    const data = iqroData[currentIqroVol];
+    const imgElement = document.getElementById('iqro-image-display');
+    const infoElement = document.getElementById('iqro-page-info');
+
+    if (imgElement && infoElement) {
+        imgElement.src = `${data.folder}/${currentIqroPage}.png`;
+        infoElement.innerText = `Iqro ${currentIqroVol} - Hal. ${currentIqroPage} / ${data.totalPages}`;
+    }
+}
+
+// Fitur Fullscreen untuk Viewer Iqro
+function toggleIqroFullscreen() {
+    const viewerCard = document.getElementById('iqro-viewer-card');
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    const imgDisplay = document.getElementById('iqro-image-display');
+
+    if (!document.fullscreenElement) {
+        if (viewerCard.requestFullscreen) {
+            viewerCard.requestFullscreen();
+        } else if (viewerCard.webkitRequestFullscreen) { /* Safari */
+            viewerCard.webkitRequestFullscreen();
+        } else if (viewerCard.msRequestFullscreen) { /* IE11 */
+            viewerCard.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
+
+// Listener untuk mengubah icon dan style saat mode Fullscreen aktif/keluar
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    const imgDisplay = document.getElementById('iqro-image-display');
+    
+    if (document.fullscreenElement) {
+        btnFullscreen.innerHTML = '<i class="fa-solid fa-compress text-sm"></i>';
+        imgDisplay.classList.remove('max-h-[70vh]');
+        imgDisplay.classList.add('max-h-[85vh]');
+    } else {
+        btnFullscreen.innerHTML = '<i class="fa-solid fa-expand text-sm"></i>';
+        imgDisplay.classList.remove('max-h-[85vh]');
+        imgDisplay.classList.add('max-h-[70vh]');
+    }
+}
+</script>
 </html>
