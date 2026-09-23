@@ -4301,6 +4301,7 @@ function goHome() {
     stopAndCloseAudio()
     stopAudio();
     stopmurojaah();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // Sembunyikan semua section
     document.querySelectorAll('main > section').forEach(section => {
         section.classList.add('hidden');
