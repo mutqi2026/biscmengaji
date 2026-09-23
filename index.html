@@ -1422,38 +1422,40 @@ body.dark-mode footer{
         <button onclick="loadIqroVolume(6)" class="iqro-vol-btn py-3 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-center text-slate-700 hover:bg-blue-600 hover:text-white transition-all shadow-sm">Iqro 6</button>
     </div>
 
-    <!-- Container Viewer Gambar Iqro -->
-    <div id="iqro-viewer-card" class="bg-slate-900 p-4 md:p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4 border border-slate-800 transition-all">
-        <!-- Control Bar (Navigasi + Tombol Fullscreen) -->
-        <div class="flex items-center justify-between w-full max-w-2xl bg-slate-800/90 backdrop-blur-md px-4 py-2.5 rounded-2xl text-white border border-slate-700/50 shadow-inner">
-            <!-- Navigasi Sebelum -->
-            <button onclick="changeIqroPage(-1)" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow">
-                <i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">Prev</span>
+   <!-- Container Viewer Gambar Iqro (Dengan Style Khusus Mobile Fullscreen) -->
+<div id="iqro-viewer-card" class="bg-slate-900 p-3 sm:p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-3 border border-slate-800 transition-all">
+    
+    <!-- Control Bar (Navigasi + Tombol Fullscreen) -->
+    <div class="flex items-center justify-between w-full max-w-2xl bg-slate-800/95 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl text-white border border-slate-700/50 shadow-inner z-10">
+        
+        <!-- Navigasi Sebelum -->
+        <button onclick="changeIqroPage(-1)" class="px-3 py-2 sm:px-4 sm:py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">Prev</span>
+        </button>
+
+        <!-- Informasi Halaman -->
+        <span id="iqro-page-info" class="text-xs sm:text-sm font-semibold tracking-wide text-blue-200 select-none">
+            Iqro 1 - Hal. 1 / 30
+        </span>
+
+        <div class="flex items-center gap-1.5 sm:gap-2">
+            <!-- Navigasi Sesudah -->
+            <button onclick="changeIqroPage(1)" class="px-3 py-2 sm:px-4 sm:py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow">
+                <span class="hidden sm:inline">Next</span> <i class="fa-solid fa-chevron-right"></i>
             </button>
 
-            <!-- Informasi Halaman -->
-            <span id="iqro-page-info" class="text-xs sm:text-sm font-semibold tracking-wide text-blue-200">
-                Iqro 1 - Halaman 1 / 30
-            </span>
-
-            <div class="flex items-center gap-2">
-                <!-- Navigasi Sesudah -->
-                <button onclick="changeIqroPage(1)" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow">
-                    <span class="hidden sm:inline">Next</span> <i class="fa-solid fa-chevron-right"></i>
-                </button>
-
-                <!-- Tombol Fullscreen -->
-                <button onclick="toggleIqroFullscreen()" id="btn-fullscreen" title="Layar Penuh" class="p-2 bg-slate-700 hover:bg-slate-600 text-blue-300 hover:text-white rounded-xl text-xs transition-all active:scale-95 border border-slate-600">
-                    <i class="fa-solid fa-expand text-sm"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Area Tampilan Gambar Iqro -->
-        <div class="w-full flex justify-center items-center overflow-auto rounded-2xl bg-slate-950 p-2 border border-slate-800/80">
-            <img id="iqro-image-display" src="img/iqro/iqro1/1.jpg" alt="Halaman Iqro" class="max-h-[70vh] w-auto object-contain rounded-lg shadow-md transition-all duration-200">
+            <!-- Tombol Fullscreen (Ukuran Pas untuk Tap Jari di Mobile) -->
+            <button onclick="toggleIqroFullscreen()" id="btn-fullscreen" title="Layar Penuh" class="p-2 sm:p-2 bg-slate-700 hover:bg-slate-600 active:scale-90 text-blue-300 hover:text-white rounded-xl text-xs transition-all border border-slate-600">
+                <i class="fa-solid fa-expand text-base sm:text-sm"></i>
+            </button>
         </div>
     </div>
+
+    <!-- Area Tampilan Gambar Iqro -->
+    <div class="w-full flex-1 flex justify-center items-center overflow-auto rounded-2xl bg-slate-950 p-2 border border-slate-800/80 min-h-[50vh]">
+        <img id="iqro-image-display" src="img/iqro/iqro1/1.jpg" alt="Halaman Iqro" class="max-h-[65vh] w-auto object-contain rounded-lg shadow-md transition-all duration-200">
+    </div>
+</div>
 </section>
 
         <!-- ==================== VIEW 2: QURAN ==================== -->
@@ -7078,24 +7080,24 @@ function updateIqroDisplay() {
     }
 }
 
-// Fitur Fullscreen untuk Viewer Iqro
+// Fitur Fullscreen yang Kompatibel dengan Mobile & Desktop
 function toggleIqroFullscreen() {
     const viewerCard = document.getElementById('iqro-viewer-card');
-    const btnFullscreen = document.getElementById('btn-fullscreen');
-    const imgDisplay = document.getElementById('iqro-image-display');
 
-    if (!document.fullscreenElement) {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        // Masuk ke Mode Fullscreen
         if (viewerCard.requestFullscreen) {
             viewerCard.requestFullscreen();
-        } else if (viewerCard.webkitRequestFullscreen) { /* Safari */
+        } else if (viewerCard.webkitRequestFullscreen) { /* Safari / iOS / Webkit */
             viewerCard.webkitRequestFullscreen();
-        } else if (viewerCard.msRequestFullscreen) { /* IE11 */
+        } else if (viewerCard.msRequestFullscreen) {
             viewerCard.msRequestFullscreen();
         }
     } else {
+        // Keluar dari Mode Fullscreen
         if (document.exitFullscreen) {
             document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
+        } else if (document.webkitExitFullscreen) { /* Safari */
             document.webkitExitFullscreen();
         } else if (document.msExitFullscreen) {
             document.msExitFullscreen();
@@ -7103,23 +7105,39 @@ function toggleIqroFullscreen() {
     }
 }
 
-// Listener untuk mengubah icon dan style saat mode Fullscreen aktif/keluar
-document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
+// Handler Perubahan Tampilan saat Masuk/Keluar Fullscreen
 function handleFullscreenChange() {
+    const viewerCard = document.getElementById('iqro-viewer-card');
     const btnFullscreen = document.getElementById('btn-fullscreen');
     const imgDisplay = document.getElementById('iqro-image-display');
-    
-    if (document.fullscreenElement) {
-        btnFullscreen.innerHTML = '<i class="fa-solid fa-compress text-sm"></i>';
-        imgDisplay.classList.remove('max-h-[70vh]');
-        imgDisplay.classList.add('max-h-[85vh]');
+
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+    if (isFullscreen) {
+        // Ubah Icon ke Compress
+        btnFullscreen.innerHTML = '<i class="fa-solid fa-compress text-base sm:text-sm"></i>';
+        
+        // Atur layout viewerCard mengisi penuh layar HP
+        viewerCard.classList.add('fixed', 'inset-0', 'z-50', 'rounded-none', 'h-screen', 'w-screen', 'justify-between');
+        
+        // Biarkan gambar mengambil tinggi maksimal layar HP
+        imgDisplay.classList.remove('max-h-[65vh]');
+        imgDisplay.classList.add('max-h-[88vh]', 'sm:max-h-[90vh]');
     } else {
-        btnFullscreen.innerHTML = '<i class="fa-solid fa-expand text-sm"></i>';
-        imgDisplay.classList.remove('max-h-[85vh]');
-        imgDisplay.classList.add('max-h-[70vh]');
+        // Ubah Icon ke Expand
+        btnFullscreen.innerHTML = '<i class="fa-solid fa-expand text-base sm:text-sm"></i>';
+        
+        // Kembalikan ke tampilan normal
+        viewerCard.classList.remove('fixed', 'inset-0', 'z-50', 'rounded-none', 'h-screen', 'w-screen', 'justify-between');
+        
+        // Kembalikan ukuran gambar semula
+        imgDisplay.classList.remove('max-h-[88vh]', 'sm:max-h-[90vh]');
+        imgDisplay.classList.add('max-h-[65vh]');
     }
 }
+
+// Listener untuk mendeteksi perubahan layar penuh (Support Chrome, Safari Mobile, Edge)
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 </script>
 </html>
