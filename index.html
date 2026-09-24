@@ -8506,7 +8506,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // State & Variables (Default KOSONG)
-let scheduledTimes = JSON.parse(localStorage.getItem('quran_notify_times')) || []; 
+// Inisialisasi scheduledTimes dari LocalStorage atau Gunakan Default
+let scheduledTimes = JSON.parse(localStorage.getItem('scheduledTimes')) || defaultScheduledTimes;
 let editingIndex = null;
 let timeCheckerInterval = null;
 let isTimeNotifyActive = false;
@@ -8765,5 +8766,85 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Data Motivasi Spesifik Per Waktu
+const timeMotivations = {
+    "02:00": {
+        title: "Waktu Tahajud",
+        text: "Di sepertiga malam terakhir, Allah turun ke langit dunia dan mengabulkan setiap doa.",
+        ref: "Hadits Riwayat Imam Bukhari (No. 1145) & Muslim (No. 758)",
+        cta: "Bangun sejenak, tunaikan Tahajud dan buka web aplikasi bisc mengaji!"
+    },
+    "05:00": {
+        title: "Waktu Menghafal",
+        text: "Pikiran masih segar di waktu fajar adalah momen terbaik untuk memperkuat hafalan Al-Qur'an.",
+        ref: "Pesan Para Ulama & Salafus Shalih",
+        cta: "Yuk, tambah hafalanmu pagi ini di web aplikasi bisc mengaji!"
+    },
+    "09:05": {
+        title: "Waktu Dhuha",
+        text: "Dua rakaat Dhuha menjadi sedekah bagi seluruh persendian tubuhmu.",
+        ref: "Hadits Riwayat Imam Muslim (No. 720)",
+        cta: "Sempatkan Dhuha dan tilawah sejenak di web aplikasi bisc mengaji!"
+    },
+    "13:00": {
+        title: "Waktu Tilawah Siang",
+        text: "Istirahat terbaik di tengah kesibukan adalah dengan menenangkan hati bersama Al-Qur'an.",
+        ref: "QS. Ar-Ra'd: 28",
+        cta: "Mari tilawah beberapa ayat di web aplikasi bisc mengaji!"
+    },
+    "18:30": {
+        title: "Waktu Tilawah Maghrib",
+        text: "Terangi rumahmu dan isi waktu antara Maghrib & Isya dengan lantunan ayat suci.",
+        ref: "Hadits Riwayat Imam Ad-Darimi (No. 3328)",
+        cta: "Waktunya tilawah malam, buka web aplikasi bisc mengaji!"
+    },
+    "19:30": {
+        title: "Waktu Muroja'ah Isya",
+        text: "Jaga hafalan Al-Qur'an dengan rutin mengulangnya agar tidak mudah hilang.",
+        ref: "Hadits Riwayat Imam Bukhari (No. 5031)",
+        cta: "Yuk, muroja'ah hafalanmu di web aplikasi bisc mengaji!"
+    }
+};
+
+// Setelan Jam Default
+const defaultScheduledTimes = ["02:00", "05:00", "09:05", "13:00", "18:30", "19:30"];
+
+// Trigger Notifikasi Browser (2 Notifikasi Terpisah)
+function triggerQuranNotification(timeStr) {
+    if (Notification.permission !== "granted") return;
+
+    let motivation;
+
+    // Cek apakah ada motivasi khusus untuk jam tersebut
+    if (timeMotivations[timeStr]) {
+        motivation = timeMotivations[timeStr];
+    } else {
+        // Jika jam kustom buatan user, ambil acak dari quranQuotes
+        const randomQuote = quranQuotes[Math.floor(Math.random() * quranQuotes.length)];
+        motivation = {
+            title: `Pengingat Qur'an (${timeStr})`,
+            text: randomQuote.text,
+            ref: randomQuote.ref,
+            cta: randomQuote.cta
+        };
+    }
+
+    // 1. Notifikasi Pertama: Kata-kata Motivasi / Hadis + Riwayat
+    new Notification(motivation.title || `Pengingat Qur'an (${timeStr})`, {
+        body: `"${motivation.text}"\n— ${motivation.ref}`,
+        icon: "https://cdn-icons-png.flaticon.com/512/2903/2903517.png",
+        tag: `quran-quote-${timeStr}`
+    });
+
+    // 2. Notifikasi Kedua: Ajakan Buka Aplikasi bisc mengaji (Jeda 1.5 detik)
+    setTimeout(() => {
+        new Notification("bisc mengaji", {
+            body: motivation.cta,
+            icon: "https://cdn-icons-png.flaticon.com/512/2903/2903517.png",
+            tag: `quran-cta-${timeStr}`
+        });
+    }, 1500);
+}
 </script>
 </html>
