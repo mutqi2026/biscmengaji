@@ -1246,6 +1246,37 @@ body.dark-mode footer{
     </div>
 </div>
 
+<!-- Component Pengingat Jam (Compact & Elegant) -->
+<div class="mt-4 p-3.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-sky-500/20 shadow-md text-xs text-slate-100">
+    <!-- Header & Toggle Status -->
+    <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-clock text-sky-400 text-sm"></i>
+            <span class="font-medium tracking-wide">Pengingat Jam</span>
+        </div>
+        <button id="toggleTimeNotifyBtn" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold px-3 py-1 rounded-md text-[11px] transition-all">
+            Aktifkan
+        </button>
+    </div>
+
+    <!-- Form Input (Compact Inline) -->
+    <div class="flex items-center gap-2 mt-2.5">
+        <input type="time" id="timeInput" class="bg-slate-800 border border-sky-500/30 text-sky-300 font-mono rounded-md px-2.5 py-1 text-xs outline-none focus:border-sky-400 [color-scheme:dark]">
+        <button id="saveTimeBtn" class="bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 px-3 py-1 rounded-md font-medium text-[11px] transition-all flex items-center gap-1">
+            <i class="fa-solid fa-plus text-[10px]" id="saveBtnIcon"></i>
+            <span id="saveBtnText">Tambah</span>
+        </button>
+        <button id="cancelEditBtn" class="hidden text-rose-400 hover:text-rose-300 px-1.5 py-1 text-[11px]">
+            Batal
+        </button>
+    </div>
+
+    <!-- Badges Container -->
+    <div id="scheduledTimesContainer" class="flex flex-wrap gap-1.5 mt-2.5">
+        <!-- Badge jam dirender via JS -->
+    </div>
+</div>
+
             <!-- 📖 Menu Awal 4 Tombol Utama -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <button onclick="openQuran()" class="flex flex-col items-center justify-center bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-xl hover:border-sky-400/60 transition-all duration-300 ease-out transform hover:-translate-y-1.5 group">
@@ -1353,9 +1384,9 @@ body.dark-mode footer{
     <span class="font-bold text-slate-800 text-base group-hover:text-emerald-700 transition-colors">Hadis Lengkap</span>
     <span class="text-xs text-slate-400 mt-1 font-medium">Kutubus Sittah & Perawi</span>
 </button>
-
             </div>
         
+            
             
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80">
                 <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2.5 text-base">
@@ -8472,6 +8503,267 @@ function copyHadith(num) {
 // Inisialisasi awal saat modul dibuka
 document.addEventListener('DOMContentLoaded', () => {
     initHadithBooks();
+});
+
+// State & Variables (Default KOSONG)
+let scheduledTimes = JSON.parse(localStorage.getItem('quran_notify_times')) || []; 
+let editingIndex = null;
+let timeCheckerInterval = null;
+let isTimeNotifyActive = false;
+
+// Kumpulan quote untuk notifikasi
+const quranQuotes = [
+    { 
+        text: "Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram.", 
+        ref: "QS. Ar-Ra'd: 28",
+        cta: "Yuk, buka web aplikasi bisc mengaji sekarang!"
+    },
+    { 
+        text: "Sebaik-baik kalian adalah orang yang mempelajari Al-Qur'an dan mengajarkannya.", 
+        ref: "Hadits Riwayat Imam Bukhari (No. 5027)",
+        cta: "Mari sempatkan baca Qur'an di web aplikasi bisc mengaji!"
+    },
+    { 
+        text: "Siapa yang membaca satu huruf Al-Qur'an maka baginya satu kebaikan dengan sepuluh kelipatan.", 
+        ref: "Hadits Riwayat Imam Tirmidzi (No. 2910)",
+        cta: "Buka web aplikasi bisc mengaji dan raih pahalamu hari ini!"
+    },
+    { 
+        text: "Orang yang mahir membaca Al-Qur'an akan bersama para malaikat yang mulia lagi taat.", 
+        ref: "Hadits Riwayat Imam Muslim (No. 798)",
+        cta: "Yukk muraja'ah di web aplikasi bisc mengaji!"
+    },
+    { 
+        text: "Bacalah Al-Qur'an, karena ia akan datang pada hari kiamat sebagai pemberi syafaat bagi pembacanya.", 
+        ref: "Hadits Riwayat Imam Muslim (No. 804)",
+        cta: "Buka web aplikasi bisc mengaji yuk!"
+    },
+    { 
+        text: "Rumah yang dibacakan Al-Qur'an akan dihadiri malaikat dan dijauhi setan.", 
+        ref: "Hadits Riwayat Imam Ad-Darimi (No. 3328)",
+        cta: "Mari mengaji sejenak di web aplikasi bisc mengaji!"
+    },
+    { 
+        text: "Hiasilah suara kalian dengan Al-Qur'an.", 
+        ref: "Hadits Riwayat Imam Abu Dawud (No. 1468)",
+        cta: "Waktunya tilawah di web aplikasi bisc mengaji!"
+    },
+    { 
+        text: "Dan Kami turunkan dari Al-Qur'an suatu yang menjadi penawar dan rahmat bagi orang-orang yang beriman.", 
+        ref: "QS. Al-Isra': 82",
+        cta: "Yuk mengaji di web aplikasi bisc mengaji!"
+    }
+];
+
+// 1. Render Tampilan List Jam (CRUD UI)
+function renderTimeBadges() {
+    const container = document.getElementById('scheduledTimesContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (scheduledTimes.length === 0) {
+        container.innerHTML = `<span class="text-white/40 italic">Belum ada jam pengingat yang diatur.</span>`;
+        return;
+    }
+
+    // Urutkan jam secara kronologis
+    scheduledTimes.sort().forEach((time, index) => {
+        const badge = document.createElement('div');
+        badge.className = 'inline-flex items-center gap-2 bg-white/10 text-amber-300 border border-white/20 px-3 py-1 rounded-full text-xs';
+        badge.innerHTML = `
+            <span class="font-semibold">${time} WIB</span>
+            <div class="flex items-center gap-1.5 border-l border-white/20 pl-2">
+                <!-- Tombol Edit -->
+                <button onclick="editScheduledTime(${index})" class="text-white/60 hover:text-amber-300 transition" title="Edit">
+                    <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                </button>
+                <!-- Tombol Hapus -->
+                <button onclick="removeScheduledTime(${index})" class="text-white/60 hover:text-red-400 transition" title="Hapus">
+                    <i class="fa-solid fa-trash-can text-[11px]"></i>
+                </button>
+            </div>
+        `;
+        container.appendChild(badge);
+    });
+}
+
+// Save ke LocalStorage
+function saveToLocalStorage() {
+    localStorage.setItem('quran_notify_times', JSON.stringify(scheduledTimes));
+}
+
+// 2. Tambah / Simpan Hasil Edit
+function handleSaveTime() {
+    const timeInput = document.getElementById('timeInput');
+    const val = timeInput.value;
+
+    if (!val) {
+        alert("Pilih jam terlebih dahulu!");
+        return;
+    }
+
+    if (editingIndex !== null) {
+        // Mode Edit
+        scheduledTimes[editingIndex] = val;
+        editingIndex = null;
+    } else {
+        // Mode Tambah Baru
+        if (scheduledTimes.includes(val)) {
+            alert("Jam tersebut sudah ada dalam daftar!");
+            return;
+        }
+        scheduledTimes.push(val);
+    }
+
+    saveToLocalStorage();
+    resetForm();
+    renderTimeBadges();
+}
+
+// 3. Masuk Mode Edit
+window.editScheduledTime = function(index) {
+    editingIndex = index;
+    const timeInput = document.getElementById('timeInput');
+    const saveBtnText = document.getElementById('saveBtnText');
+    const saveBtnIcon = document.getElementById('saveBtnIcon');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+
+    timeInput.value = scheduledTimes[index];
+    saveBtnText.textContent = "Simpan";
+    saveBtnIcon.className = "fa-solid fa-check text-xs";
+    cancelBtn.classList.remove('hidden');
+};
+
+// 4. Hapus Jam
+window.removeScheduledTime = function(index) {
+    if (confirm(`Hapus pengingat jam ${scheduledTimes[index]}?`)) {
+        scheduledTimes.splice(index, 1);
+        saveToLocalStorage();
+        renderTimeBadges();
+        
+        // Reset form jika yang dihapus sedang di-edit
+        if (editingIndex === index) {
+            resetForm();
+        }
+    }
+};
+
+// Reset Form ke Mode Tambah
+function resetForm() {
+    editingIndex = null;
+    const timeInput = document.getElementById('timeInput');
+    const saveBtnText = document.getElementById('saveBtnText');
+    const saveBtnIcon = document.getElementById('saveBtnIcon');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+
+    if (timeInput) timeInput.value = '';
+    if (saveBtnText) saveBtnText.textContent = "Tambah Jam";
+    if (saveBtnIcon) saveBtnIcon.className = "fa-solid fa-plus text-xs";
+    if (cancelBtn) cancelBtn.classList.add('hidden');
+}
+
+// 5. Trigger Notifikasi Browser (2 Notifikasi Terpisah)
+function triggerQuranNotification(timeStr) {
+    if (Notification.permission !== "granted") return;
+
+    const randomQuote = quranQuotes[Math.floor(Math.random() * quranQuotes.length)];
+
+    // 1. Notifikasi Pertama: Ayat / Hadis + Riwayat
+    new Notification(`Pengingat Qur'an (${timeStr})`, {
+        body: `"${randomQuote.text}"\n— ${randomQuote.ref}`,
+        icon: "https://cdn-icons-png.flaticon.com/512/2903/2903517.png",
+        tag: `quran-quote-${timeStr}`
+    });
+
+    // 2. Notifikasi Kedua: Ajakan Buka Aplikasi (Dikirim dengan jeda 1.5 detik)
+    setTimeout(() => {
+        new Notification("bisc mengaji", {
+            body: randomQuote.cta,
+            icon: "https://cdn-icons-png.flaticon.com/512/2903/2903517.png",
+            tag: `quran-cta-${timeStr}`
+        });
+    }, 1500); // 1500 ms = 1.5 detik
+}
+
+// 6. Scheduler Pengecekan Waktu Nyata
+function startSpecificTimeScheduler() {
+    stopSpecificTimeScheduler();
+
+    let lastTriggeredMinute = "";
+
+    timeCheckerInterval = setInterval(() => {
+        const now = new Date();
+        const currentHours = String(now.getHours()).padStart(2, '0');
+        const currentMinutes = String(now.getMinutes()).padStart(2, '0');
+        const currentTimeStr = `${currentHours}:${currentMinutes}`;
+
+        if (currentTimeStr !== lastTriggeredMinute) {
+            if (scheduledTimes.includes(currentTimeStr)) {
+                triggerQuranNotification(currentTimeStr);
+                lastTriggeredMinute = currentTimeStr;
+            }
+        }
+    }, 10000); // Pengecekan setiap 10 detik
+
+    isTimeNotifyActive = true;
+    updateTimeNotifyUI();
+}
+
+function stopSpecificTimeScheduler() {
+    if (timeCheckerInterval) {
+        clearInterval(timeCheckerInterval);
+        timeCheckerInterval = null;
+    }
+    isTimeNotifyActive = false;
+    updateTimeNotifyUI();
+}
+
+function updateTimeNotifyUI() {
+    const btn = document.getElementById('toggleTimeNotifyBtn');
+    if (!btn) return;
+
+    if (isTimeNotifyActive) {
+        btn.textContent = "Nonaktifkan";
+        btn.className = "bg-red-500/20 text-red-300 border border-red-400/40 px-3 py-1 rounded-full hover:bg-red-500/30 transition";
+    } else {
+        btn.textContent = "Aktifkan";
+        btn.className = "bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3 py-1 rounded-full hover:bg-amber-400/30 transition";
+    }
+}
+
+// 7. Event Listener Inisialisasi
+document.addEventListener("DOMContentLoaded", () => {
+    renderTimeBadges();
+
+    const saveBtn = document.getElementById('saveTimeBtn');
+    const cancelBtn = document.getElementById('cancelEditBtn');
+    const toggleBtn = document.getElementById('toggleTimeNotifyBtn');
+
+    if (saveBtn) saveBtn.addEventListener('click', handleSaveTime);
+    if (cancelBtn) cancelBtn.addEventListener('click', resetForm);
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', async () => {
+            if (isTimeNotifyActive) {
+                stopSpecificTimeScheduler();
+            } else {
+                if (scheduledTimes.length === 0) {
+                    alert("Tambahkan minimal 1 jam pengingat sebelum mengaktifkan!");
+                    return;
+                }
+
+                if ("Notification" in window) {
+                    const permission = await Notification.requestPermission();
+                    if (permission === "granted") {
+                        startSpecificTimeScheduler();
+                    } else {
+                        alert("Izin notifikasi diperlukan untuk mengaktifkan fitur ini.");
+                    }
+                }
+            }
+        });
+    }
 });
 </script>
 </html>
