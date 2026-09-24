@@ -8663,6 +8663,9 @@ function resetForm() {
     if (cancelBtn) cancelBtn.classList.add('hidden');
 }
 
+// Variable path/URL logo bisc mengaji
+const biscLogoIcon = "./img/bisc.png"; // Ubah sesuai lokasi/path file gambar kamu
+
 // 5. Trigger Notifikasi Browser (2 Notifikasi Terpisah)
 function triggerQuranNotification(timeStr) {
     if (Notification.permission !== "granted") return;
@@ -8672,7 +8675,7 @@ function triggerQuranNotification(timeStr) {
     // 1. Notifikasi Pertama: Ayat / Hadis + Riwayat
     new Notification(`Pengingat Qur'an (${timeStr})`, {
         body: `"${randomQuote.text}"\n— ${randomQuote.ref}`,
-        icon: "https://cdn-icons-png.flaticon.com/512/2903/2903517.png",
+        icon: biscLogoIcon,
         tag: `quran-quote-${timeStr}`
     });
 
@@ -8680,7 +8683,7 @@ function triggerQuranNotification(timeStr) {
     setTimeout(() => {
         new Notification("bisc mengaji", {
             body: randomQuote.cta,
-            icon: "https://cdn-icons-png.flaticon.com/512/2903/2903517.png",
+            icon: biscLogoIcon,
             tag: `quran-cta-${timeStr}`
         });
     }, 1500); // 1500 ms = 1.5 detik
