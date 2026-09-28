@@ -56,11 +56,9 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
    
-   <!-- Video Intro Overlay -->
+<!-- Image Intro Overlay -->
 <div id="intro-container">
-    <video id="intro-video" autoplay muted playsinline>
-        <source src="intro.mp4" type="video/mp4">
-    </video>
+    <img id="intro-image" src="./img/bisc.png" alt="Intro Image">
 </div>
    
    <style>
@@ -637,13 +635,32 @@ body{
 }
 
 /* Intro */
-#intro-container{
-  background:linear-gradient(135deg,rgba(2,17,29,.96),rgba(5,42,62,.94)) !important;
-  backdrop-filter:blur(18px);
+/* Intro Overlay */
+#intro-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999; /* Memastikan intro selalu di paling atas */
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  background: linear-gradient(135deg, rgba(2, 17, 29, .96), rgba(5, 42, 62, .94)) !important;
+  backdrop-filter: blur(18px);
+  transition: opacity 0.5s ease; /* Transisi halus saat fade out */
 }
-#intro-video{
-  border:1px solid rgba(240,201,106,.30) !important;
-  box-shadow:0 35px 100px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04) !important;
+
+/* Styling Ukuran Gambar Intro */
+#intro-image {
+  max-width: 80%;       /* Maksimal lebar gambar 80% dari layar */
+  max-height: 80vh;     /* Maksimal tinggi gambar 80% dari tinggi layar */
+  width: auto;
+  height: auto;
+  object-fit: contain;  /* Menjaga proporsi gambar agar tidak terdistorsi */
+  border-radius: 12px;  /* Opsional: memberi lekukan di sudut gambar */
 }
 
 /* Header — elegant glass bar */
@@ -4348,20 +4365,13 @@ function goHome() {
 }
 
 const introContainer = document.getElementById('intro-container');
-const introVideo = document.getElementById('intro-video');
+const introImage = document.getElementById('intro-image');
 const mainContent = document.getElementById('main-content');
 
-// Ketika video selesai diputar
-introVideo.onended = function() {
-    tutupIntro();
-};
-
-// Opsional: Tombol Lewati (Skip) jika pengunjung tidak ingin menunggu
-/* 
+// Sembunyikan intro otomatis setelah 2 detik (2000 milidetik)
 setTimeout(() => {
-    // Tambahkan tombol skip jika diperlukan
-}, 2000); 
-*/
+    tutupIntro();
+}, 2000);
 
 function tutupIntro() {
     // Berikan efek transisi pudar (fade out)
@@ -4370,7 +4380,7 @@ function tutupIntro() {
     setTimeout(() => {
         introContainer.style.display = 'none'; // Sembunyikan elemen intro
         mainContent.style.display = 'block';   // Tampilkan konten utama
-    }, 500); // Waktu harus sama dengan durasi transition di CSS (0.5s)
+    }, 500); // Waktu transisi fade out (0.5 detik)
 }
 
 let currentMushafPage = 1;
