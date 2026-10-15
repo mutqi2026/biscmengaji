@@ -2643,7 +2643,7 @@ body.dark-mode footer{
         let allSurah = [];
         let currentSurahData = null;
         let currentAyatIndex = 0;
-        let selectedQori = '01'; 
+        let selectQori = '01'; 
         let currentActiveView = 'home';
 
         let currentJuz = 30;
@@ -3448,7 +3448,7 @@ audioFiles: [
 
             currentAyatIndex = index;
             let ayat = currentSurahData.ayat[index];
-            let audioUrl = ayat.audio[selectedQori] || Object.values(ayat.audio)[0];
+            let audioUrl = ayat.audio[selectQori] || Object.values(ayat.audio)[0];
 
             audioBar.classList.remove('hidden');
             barAyatNum.innerText = ayat.nomorAyat;
