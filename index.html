@@ -3483,12 +3483,25 @@ audioFiles: [
             });
         }
 
-        function changeQori() {
-            selectedQori = qoriSelect.value;
-            if (currentSurahData && !audioBar.classList.contains('hidden')) {
-                playAyat(currentAyatIndex);
-            }
-        }
+function changeQori() {
+    const qoriSelect = document.getElementById('qori-select');
+    selectedQori = qoriSelect.value;
+    
+    // Perbarui subtitle nama qori pada audio bar bawah
+    const barQoriSubtitle = document.getElementById('bar-qori-subtitle');
+    if (barQoriSubtitle) {
+        barQoriSubtitle.innerText = `Qori: ${qoriSelect.options[qoriSelect.selectedIndex].text}`;
+    }
+
+    // Jika sedang memutar surat/ayat dan audio bar tidak disembunyikan, langsung putar ulang ayat saat ini dengan qori baru
+    const audioBar = document.getElementById('audio-bar');
+    const mainAudio = document.getElementById('main-audio');
+    
+    if (currentSurahData && audioBar && !audioBar.classList.contains('hidden')) {
+        // Simpan posisi detik terakhir (opsional) atau langsung muat ulang dari awal ayat
+        playAyat(currentAyatIndex);
+    }
+}
 
         mainAudio.addEventListener('ended', () => {
             if (currentSurahData && currentAyatIndex < currentSurahData.ayat.length - 1) {
