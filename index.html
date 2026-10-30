@@ -150,12 +150,16 @@
             display: flex;
             justify-content: center;
             width: 100%;
+            position: relative;
+    pointer-events: auto !important;
         }
         .video-container iframe {
             width: 100%;
             max-width: 560px;
             aspect-ratio: 16 / 9;
             border-radius: 1rem;
+            pointer-events: auto !important;
+    z-index: 10;
         }
 
         #sub-materi-container {
@@ -622,6 +626,7 @@ body{
     radial-gradient(760px 380px at 108% 8%,rgba(215,169,61,.10),transparent 60%),
     linear-gradient(180deg,#f8fbfc 0%,#f3f7f9 100%) !important;
   color:var(--ui-ink);
+      pointer-events: auto !important;
 }
 
 /* Premium selection */
@@ -1036,6 +1041,30 @@ body.dark-mode footer{
     transition-duration:.01ms !important;
   }
 }
+
+/* Container pembungkus gambar Iqro */
+#iqro-img-container {
+    width: 100% !important;
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    background-color: #020617 !important; /* bg-slate-950 */
+    padding: 0.5rem !important;
+    min-height: 55vh !important;
+}
+
+/* Gambar Iqro Responsif */
+#iqro-image-display {
+    max-width: 100% !important;
+    max-height: 70vh !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+}
 </style>
 
 
@@ -1102,6 +1131,17 @@ body.dark-mode footer{
  #bisc-ai-modal{padding:10px}
  #bisc-ai-panel{width:100%;height:calc(100vh - 20px);border-radius:24px}
  .ai-quiz-settings{grid-template-columns:1fr}
+}
+
+/* Mencegah pointer-events terkunci di tingkat global */
+body, html {
+    pointer-events: auto !important;
+    overflow-x: hidden;
+}
+
+/* Memastikan iframe tidak meninggalkan layer tak kasat mata setelah keluar fullscreen */
+iframe {
+    pointer-events: auto;
 }
 </style>
 </head>
@@ -1457,8 +1497,8 @@ body.dark-mode footer{
     <div class="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 text-2xl mb-4 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300 shadow-inner group-hover:shadow-lg group-hover:scale-110">
         <i class="fa-solid fa-book-bookmark "></i>
     </div>
-    <span class="font-bold text-slate-800 text-base group-hover:text-amber-700 transition-colors">Doa Harian</span>
-    <span class="text-xs text-slate-400 mt-1 font-medium">Kumpulan Doa Sehari-hari</span>
+    <span class="font-bold text-slate-800 text-base group-hover:text-amber-700 transition-colors">Tata Cara Sholat</span>
+    <span class="text-xs text-slate-400 mt-1 font-medium">Kumpulan Doa & Dzikir Sehari-hari</span>
 </button>
 
 <!-- Tombol Jadwal Puasa & Imsakiyah (Tema Merah) -->
@@ -1884,30 +1924,7 @@ body.dark-mode footer{
 
 <!-- ==================== VIEW: DOA HARIAN (BLUE THEME) ==================== -->
 <section id="view-doa" class="view-panel hidden space-y-6 max-w-5xl mx-auto">
-    <!-- Header Banner Doa Harian (Gradient Biru) -->
-    <div class="bg-gradient-to-br from-blue-700 via-sky-800 to-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-lg border border-blue-600/30">
-        <button onclick="goHome()" class="text-xs text-blue-200 font-bold flex items-center gap-2 mb-4 hover:underline cursor-pointer">
-            <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
-        </button>
-        <h2 class="text-2xl font-bold mb-1 flex items-center gap-2.5">
-            <i class="fa-solid fa-mosque text-blue-300"></i> Doa Harian (Hisnul Muslim)
-        </h2>
-        <p class="text-xs sm:text-sm text-blue-100/90">Kumpulan doa-doa shahih pilihan untuk amalan sehari-hari.</p>
-    </div>
-
-    <!-- Search Bar & Container -->
-    <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200/80 space-y-5">
-        <!-- Input Pencarian -->
-        <div class="relative">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input type="text" id="search-doa" oninput="filterDoa()" placeholder="Cari doa (misal: Makan, Tidur, Masuk Masjid)..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all">
-        </div>
-
-        <!-- Container List Doa -->
-        <div id="doa-list" class="grid grid-cols-1 gap-3">
-            <!-- Item doa di-render lewat JavaScript -->
-        </div>
-    </div>
+ <div style="position:relative;padding-top:max(60%,324px);width:100%;height:0;"><iframe style="position:absolute;border:none;width:100%;height:100%;left:0;top:0;" src="https://online.fliphtml5.com/mutqi/henm/" title="Buku Doa Harian dan Tata Cara Shalat 2026 ULTIMATE SANGAT" seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" ></iframe></div>
 </section>
         <!-- ==================== VIEW 2: QURAN ==================== -->
 <section id="view-quran" class="view-panel space-y-3 md:space-y-4 w-full max-w-[1400px] mx-auto px-2 sm:px-4 transition-all">
@@ -3910,57 +3927,57 @@ audioFiles: [
             }
         }
 
-        function renderTahsinExamples(subCategoryKey) {
-            // Update visual active state tombol sub-materi
-            const subCategories = TAHSIN_COMPACT_DATA[activeMainCategory];
-            Object.keys(subCategories).forEach(key => {
-                const btn = document.getElementById(`sub-btn-${key}`);
-                if (btn) {
-                    if (key === subCategoryKey) {
-                        btn.className = "py-2 px-3.5 text-xs font-bold rounded-full border border-sky-500 bg-sky-500 text-white transition duration-150 shadow-sm";
-                    } else {
-                        btn.className = "py-2 px-3.5 text-xs font-semibold rounded-full border border-slate-200 bg-slate-50 text-slate-700 hover:bg-sky-50 hover:text-sky-800 hover:border-sky-300 transition duration-150 shadow-sm";
-                    }
-                }
-            });
+function renderTahsinExamples(subCategoryKey) {
+    // Hentikan/bersihkan iframe lama jika ada
+    const oldContainer = document.getElementById('tahsin-tab-content');
+    if (oldContainer) {
+        oldContainer.innerHTML = ''; // Reset konten sebelumnya
+    }
 
-            // Ambil data dari sub-materi tajwid terpilih
-            const subMateriData = TAHSIN_COMPACT_DATA[activeMainCategory][subCategoryKey];
-            const contentContainer = document.getElementById('tahsin-tab-content');
-            const videoId = subMateriData.videoId;
-            
-            let html = `
-                <!-- Penjelasan Umum diletakkan dalam 1 paragraf di atas bagian 8 contoh bacaan -->
-                <div class="bg-sky-50 border border-sky-100 p-5 rounded-2xl text-sm text-sky-900 leading-relaxed shadow-sm">
-                    <strong>Penjelasan Materi:</strong> ${subMateriData.penjelasan}
-                </div>
-            
-                <div class="video-container">
-            <iframe id="video-player" width="560" height="315" src="https://www.youtube.com/embed/${videoId}" 
-            title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-            </div>
-            
-            <div class="flex items-center justify-between pb-1 pt-2 border-b border-slate-200/60">
-                    <h3 class="text-xs font-extrabold uppercase text-slate-400 tracking-wider">Daftar 8 Contoh Latihan Murni Arab:</h3>
-                    <span class="bg-sky-100 text-sky-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">${SUB_MATERI_NAMES[activeMainCategory][subCategoryKey]}</span>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    
-            `;
+    // Update state tombol aktif...
+    const subCategories = TAHSIN_COMPACT_DATA[activeMainCategory];
+    Object.keys(subCategories).forEach(key => {
+        const btn = document.getElementById(`sub-btn-${key}`);
+        if (btn) {
+            btn.className = (key === subCategoryKey) 
+                ? "py-2 px-3.5 text-xs font-bold rounded-full border border-sky-500 bg-sky-500 text-white transition duration-150 shadow-sm" 
+                : "py-2 px-3.5 text-xs font-semibold rounded-full border border-slate-200 bg-slate-50 text-slate-700 hover:bg-sky-50 hover:text-sky-800 transition duration-150 shadow-sm";
+        }
+    });
 
-            subMateriData.contoh.forEach((arabText, index) => {
-                const audioPath = subMateriData.audioFiles[index];
-                html += `
+    const subMateriData = TAHSIN_COMPACT_DATA[activeMainCategory][subCategoryKey];
+    const videoId = subMateriData.videoId;
+    
+    let html = `
+        <div class="bg-sky-50 border border-sky-100 p-5 rounded-2xl text-sm text-sky-900 leading-relaxed shadow-sm">
+            <strong>Penjelasan Materi:</strong> ${subMateriData.penjelasan}
+        </div>
+    
+        <div class="video-container relative w-full overflow-hidden rounded-2xl shadow-md">
+            <iframe id="video-player" class="w-full aspect-video rounded-2xl" src="https://www.youtube.com/embed/${videoId}" 
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="flex items-center justify-between pb-1 pt-2 border-b border-slate-200/60">
+            <h3 class="text-xs font-extrabold uppercase text-slate-400 tracking-wider">Daftar 8 Contoh Latihan Murni Arab:</h3>
+            <span class="bg-sky-100 text-sky-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full">${SUB_MATERI_NAMES[activeMainCategory][subCategoryKey]}</span>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    `;
+
+    subMateriData.contoh.forEach((arabText, index) => {
+        const audioPath = subMateriData.audioFiles[index];
+        html += `
             <div onclick="playLocalAudio('${audioPath}')" class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center justify-center hover:border-sky-300 transition duration-300 group min-h-[110px] cursor-pointer">
                 <div class="font-arabic font-bold text-sky-800 text-2xl leading-normal text-center select-none">${arabText}</div>
             </div>
         `;
-            });
+    });
 
-            html += "</div>";
-            contentContainer.innerHTML = html;
-        }
+    html += "</div>";
+    oldContainer.innerHTML = html;
+}
 
         /* ================= MODUL 4: INFORMASI ================= */
         function openInformasi() { switchView('informasi'); }
@@ -7625,6 +7642,18 @@ function openIqro() {
 function loadIqroVolume(vol) {
     currentIqroVol = vol;
     currentIqroPage = 1;
+    
+    // Update tampilan tombol jilid yang aktif (opsional, jika Anda punya tombol dengan class .iqro-vol-btn)
+    document.querySelectorAll('.iqro-vol-btn').forEach((btn, idx) => {
+        if ((idx + 1) === vol) {
+            btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+            btn.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+        } else {
+            btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+            btn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+        }
+    });
+
     updateIqroDisplay();
 }
 
@@ -7648,6 +7677,42 @@ function updateIqroDisplay() {
     if (imgElement && infoElement) {
         imgElement.src = `${data.folder}/${currentIqroPage}.png`;
         infoElement.innerText = `Iqro ${currentIqroVol} - Hal. ${currentIqroPage} / ${data.totalPages}`;
+        
+        // Auto scroll ke atas penampil gambar agar pas di layar ponsel
+        const container = imgElement.parentElement;
+        if (container) container.scrollTop = 0;
+    }
+}
+
+// ==========================================
+// TAMBAHAN: Fitur Swipe (Sentuhan Jari di HP)
+// ==========================================
+
+const iqroViewerCard = document.getElementById('view-iqro') || document.getElementById('iqro-image-display');
+
+if (iqroViewerCard) {
+    iqroViewerCard.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    iqroViewerCard.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleIqroSwipe();
+    }, { passive: true });
+}
+
+function handleIqroSwipe() {
+    const minSwipeDistance = 50; // Batas minimal geseran dalam pixel
+    const distance = touchEndX - touchStartX;
+
+    if (Math.abs(distance) < minSwipeDistance) return;
+
+    if (distance > 0) {
+        // Digeser ke kanan -> Kembali ke halaman sebelumnya
+        changeIqroPage(-1);
+    } else {
+        // Digeser ke kiri -> Lanjut ke halaman berikutnya
+        changeIqroPage(1);
     }
 }
 
@@ -8399,15 +8464,15 @@ function openHadisView() {
 }
 // Daftar Kitab Perawi & Estimasi Jumlah Hadis
 const HADITH_BOOKS = [
-    { id: 'bukhari', name: 'HR. Bukhari', total: 7008, desc: 'Shahih Bukhari' },
-    { id: 'muslim', name: 'HR. Muslim', total: 5362, desc: 'Shahih Muslim' },
-    { id: 'abu-daud', name: 'HR. Abu Daud', total: 4590, desc: 'Sunan Abu Daud' },
-    { id: 'tirmidzi', name: 'HR. Tirmidzi', total: 3891, desc: 'Sunan At-Tirmidzi' },
-    { id: 'nasai', name: 'HR. An-Nasa\'i', total: 5662, desc: 'Sunan An-Nasa\'i' },
-    { id: 'ibnu-majah', name: 'HR. Ibnu Majah', total: 4285, desc: 'Sunan Ibnu Majah' },
-    { id: 'ahmad', name: 'HR. Ahmad', total: 4305, desc: 'Musnad Ahmad' },
-    { id: 'darimi', name: 'HR. Ad-Darimi', total: 3367, desc: 'Sunan Ad-Darimi' },
-    { id: 'malik', name: 'HR. Malik', total: 1587, desc: 'Muwatta Malik' }
+    { id: 'bukhari', name: 'HR. Bukhari', total: 7008, desc: 'Shahih Bukhari', note:'No versi Fathul Bari' },
+    { id: 'muslim', name: 'HR. Muslim', total: 5362, desc: 'Shahih Muslim', note:'No versi Syarh Shahih Muslim' },
+    { id: 'abu-daud', name: 'HR. Abu Daud', total: 4590, desc: 'Sunan Abu Daud', note:'No versi Baitul Afkar Ad Dauliah' },
+    { id: 'tirmidzi', name: 'HR. Tirmidzi', total: 3891, desc: 'Sunan At-Tirmidzi', note:'No versi Maktabatu al Maarif Riyadh' },
+    { id: 'nasai', name: 'HR. An-Nasa\'i', total: 5662, desc: 'Sunan An-Nasa\'i', note:'No versi Maktabatu al Maarif Riyadh' },
+    { id: 'ibnu-majah', name: 'HR. Ibnu Majah', total: 4285, desc: 'Sunan Ibnu Majah', note:'No versi Maktabatu al Maarif Riyadh' },
+    { id: 'ahmad', name: 'HR. Ahmad', total: 4305, desc: 'Musnad Ahmad', note:'No versi Daar Al Marifah Libanon' },
+    { id: 'darimi', name: 'HR. Ad-Darimi', total: 3367, desc: 'Sunan Ad-Darimi', note:'No versi Daar Al Marifah Libanon' },
+    { id: 'malik', name: 'HR. Malik', total: 1587, desc: 'Muwatta Malik', note:'No versi Daarul Mughni Riyadh' }
 ];
 
 let activeBook = null;
@@ -8430,6 +8495,9 @@ function initHadithBooks() {
             <div>
                 <h3 class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-sky-700 transition-colors">${book.name}</h3>
                 <p class="text-xs text-slate-400 mt-0.5">${book.desc}</p>
+            </div>
+            <div>
+               <p class="text-xs text-slate-400 mt-0.5">${book.note}</p>
             </div>
         </div>
     `).join('');
@@ -8860,6 +8928,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Mendeteksi ketika pengguna keluar dari mode fullscreen (baik tombol ESC maupun tombol close player)
+document.addEventListener('fullscreenchange', handleFullscreenExit);
+document.addEventListener('webkitfullscreenchange', handleFullscreenExit); // Kompatibilitas Safari/WebKit
+document.addEventListener('mozfullscreenchange', handleFullscreenExit);    // Kompatibilitas Firefox
+document.addEventListener('MSFullscreenChange', handleFullscreenExit);    // Kompatibilitas IE/Edge lama
+
+function handleFullscreenExit() {
+    // Jika saat ini TIDAK lagi dalam mode fullscreen
+    if (!document.fullscreenElement && !document.webkitFullscreenElement && 
+        !document.mozFullScreenElement && !document.msFullscreenElement) {
+        
+        // Paksa aktifkan kembali pointer-events pada body dan container utama
+        document.body.style.pointerEvents = 'auto';
+        
+        const container = document.getElementById('tahsin-tab-content');
+        if (container) {
+            container.style.pointerEvents = 'auto';
+        }
+
+        // Trik opsional: Beri sedikit jeda untuk merefresh fokus iframe agar tidak 'nyangkut'
+        const iframe = document.getElementById('video-player');
+        if (iframe) {
+            iframe.style.pointerEvents = 'none';
+            setTimeout(() => {
+                iframe.style.pointerEvents = 'auto';
+            }, 50);
+        }
+    }
+}
 
 </script>
 </html>
